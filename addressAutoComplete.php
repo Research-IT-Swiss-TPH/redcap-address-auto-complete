@@ -3,6 +3,7 @@
 // Set the namespace defined in your config file
 namespace STPH\addressAutoComplete;
 
+use \REDCap;
 
 if( file_exists("vendor/autoload.php") ){
     require 'vendor/autoload.php';
@@ -11,7 +12,8 @@ if( file_exists("vendor/autoload.php") ){
 // Declare your module class, which must extend AbstractExternalModule 
 class addressAutoComplete extends \ExternalModules\AbstractExternalModule {
 
-    private $moduleName = "Address Auto Complete";  
+    private $moduleName = "Address Auto Complete"; 
+    private $target;
 
    /**
     * Constructs the class
@@ -28,7 +30,25 @@ class addressAutoComplete extends \ExternalModules\AbstractExternalModule {
     *
     */
     public function redcap_every_page_top($project_id = null) {
-        $this->renderModule();
+
+        $target_name = $this->getProjectSetting("target-field");
+        $target_type = REDCap::getFieldType($target);
+        $this->target = $target_name;
+
+
+        if($this->isPage("Design/online_designer.php")) {
+            $this->includeJavascript();
+            dump("This is the right page");
+        }
+
+        if($this->isPage("DataEntry/index.php")) {
+            $this->includeJavascript();
+            $this->includeCSS();
+        }
+
+        //dump($target);
+
+        //$this->renderModule();
     }
 
    /**
@@ -56,7 +76,11 @@ class addressAutoComplete extends \ExternalModules\AbstractExternalModule {
     public function helloFrom_addressAutoComplete() {
 
         
-        return $this->tt("hello_from").' '.$this->moduleName;
+        $targetField = $this->getProjectSetting("target-field");
+
+        return $targetField;
+
+        //return $this->tt("hello_from").' '.$this->moduleName;
         
 
     }
@@ -73,6 +97,7 @@ class addressAutoComplete extends \ExternalModules\AbstractExternalModule {
         <script> 
             $(function() {
                 $(document).ready(function(){
+                    STPH_addressAutoComplete.target = '<?= $this->target ?>';
                     STPH_addressAutoComplete.init();
                 })
             });

@@ -29,7 +29,52 @@
 
     "system-settings": [],
 
-    "project-settings": [],
+    "project-settings": [
+        {
+            "key": "target-field",
+            "type": "field-list",
+            "name": "Select target field to be transformed into Address Auto-Complete"
+        },
+        {
+            "key": "target-fields",
+            "type": "sub_settings",
+            "name": "Add a target field",
+            "sub_settings": [
+                {
+                    "key":"field-name",
+                    "type": "field-list",
+                    "name": "Field Name"
+                },
+                {
+                    "key":"meta-data",
+                    "type": "sub_settings",
+                    "name": "Meta Data",
+                    "sub_settings": [
+                        {
+                            "key":"output",
+                            "type": "dropdown",
+                            "name": "Output",
+                            "choices": [
+                                {
+                                    "name": "x",
+                                    "value": "x"
+                                },
+                                {
+                                    "name": "y",
+                                    "value": "y"
+                                }
+                            ]
+                        },
+                        {
+                            "key": "meta-field",
+                            "type": "field-list",
+                            "name": "Meta Field name"
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
 
     "crons": [],
 
