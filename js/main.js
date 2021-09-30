@@ -38,14 +38,6 @@ STPH_addressAutoComplete.init = function() {
 
   }
 
-  //  Register Event Listener: Change
-  target_input_aac.on("change", function(){
-
-    var value = $(this).val();
-    if(value != sessionStorage.getItem("aac-label"))  {
-    }
-    
-  });
 
   //  Register Event Listener: Input
   target_input_aac.on("input", function(){
@@ -94,6 +86,28 @@ STPH_addressAutoComplete.init = function() {
 
     },    
 
+    open: function() {
+
+      var that = $(this).data('ui-autocomplete');
+      var list = $('#ui-id-'+that.menu.uuid);      
+      var width = list.outerWidth();
+      var height = list.outerHeight();
+      var left = list.position().left;
+      var top = list.position().top + list.outerHeight();
+
+      console.log(top);
+      console.log(height);
+      console.log(top + height);
+
+      var api_service_markup = '<svg width="10px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 604 669"><path fill="red" d="M302 2c100 0 200 17 300 50 0 234 2 482-300 615C0 534 2 286 2 52 102 19 202 2 302 2z"/><path fill="#fff" d="M102 242h140V102h120v140h140v120H362v140H242V362H102z"/></svg> geo.admin.ch';
+      $('<div style="left:'+left+'px;top:'+top +'px;width:'+width+'px;" class="aac-list-footer">'+api_service_markup+'</div>').insertAfter(list);
+
+    },
+
+    close: function(event,ui) {
+      $(".aac-list-footer").remove();
+    },
+
     //  Set Search Actions
     search: function(event, ui) { 
 
@@ -121,7 +135,6 @@ STPH_addressAutoComplete.init = function() {
         "is-valid", 
         ui
       );
-
       target_input.val(ui.item.label);
     }
 

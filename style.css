@@ -47,3 +47,14 @@
     float:right;
     margin-right:10%;
 }
+
+.aac-list-footer {
+    position: absolute;
+    background: white;
+    padding: 4px;
+    text-align: right;
+    font-style: italic;
+    color: lightslategray;
+    padding-right: 7px;
+}
+
