@@ -14,6 +14,7 @@ class addressAutoComplete extends \ExternalModules\AbstractExternalModule {
 
     private $moduleName = "Address Auto Complete"; 
     private $target;
+    private $lang;
 
    /**
     * Constructs the class
@@ -36,17 +37,11 @@ class addressAutoComplete extends \ExternalModules\AbstractExternalModule {
         $this->target = $target_name;
 
 
-        if($this->isPage("Design/online_designer.php")) {
-            $this->includeJavascript();
-            dump("This is the right page");
-        }
-
         if($this->isPage("DataEntry/index.php")) {
+            $this->setLanguageStrings();
             $this->includeJavascript();
             $this->includeCSS();
         }
-
-        //dump($target);
 
         //$this->renderModule();
     }
@@ -58,13 +53,22 @@ class addressAutoComplete extends \ExternalModules\AbstractExternalModule {
     */
     private function renderModule() {
         
-        $this->includeJavascript();
-        
-        
+        $this->includeJavascript();              
         $this->includeCSS();
-        
 
-        print '<p class="address-auto-complete">'.$this->helloFrom_addressAutoComplete().'<p>';
+
+    }
+
+    private function setLanguageStrings() {
+
+        $this->lang = array(
+            "aac_status_default" => $this->tt("aac_status_default"),
+            "aac_status_is_loading" => $this->tt("aac_status_is_loading"),
+            "aac_status_is_not_listed" => $this->tt("aac_status_is_not_listed"),
+            "aac_status_is_listed" => $this->tt("aac_status_is_listed"),
+            "aac_status_is_valid" => $this->tt("aac_status_is_valid"),
+            "alert_no_selection" => $this->tt("alert_no_selection")
+        );
 
     }
 
@@ -98,6 +102,7 @@ class addressAutoComplete extends \ExternalModules\AbstractExternalModule {
             $(function() {
                 $(document).ready(function(){
                     STPH_addressAutoComplete.target = '<?= $this->target ?>';
+                    STPH_addressAutoComplete.lang = <?php print json_encode($this->lang) ?>;
                     STPH_addressAutoComplete.init();
                 })
             });

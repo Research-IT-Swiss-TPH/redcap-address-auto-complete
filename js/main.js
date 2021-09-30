@@ -8,62 +8,198 @@ var STPH_addressAutoComplete = STPH_addressAutoComplete || {};
 // Initialization
 STPH_addressAutoComplete.init = function() {
 
+  console.log("Address auto-complete module has been initialized");
 
-    console.log("Address auto-complete module has been initialized");
-    console.log("Field transformed: " + STPH_addressAutoComplete.target);
+  var target_input = $('#'+STPH_addressAutoComplete.target+'-tr').find('input');
+  target_input.hide();
 
-
-    var target_input = $('#'+STPH_addressAutoComplete.target+'-tr').find('input');
-    //  Hide original input
-    target_input.hide();
-
-    //  Add Addres Auto Complete Input
-    var autoCompleteInput = '<div style="padding-right:10%;" class="input-group mb-3 mt-3"><div class="input-group-prepend"><span class="input-group-text" id="basic-addon1"><i class="fas fa-map-marker-alt"></i></span></div><input id="address-auto-complete-' + STPH_addressAutoComplete.target + '" type="text" class="form-control address-auto-complete-input is-not-listed" placeholder="" aria-label="Address" aria-describedby="basic-addon1"><small id="autoCompleteHelp" class="form-text text-muted"><span id="aac-status">Start typing the location to begin.</span><br><span id="aac-meta">Meta: <span id="aac-meta-preview"></span></span></small></div>';
-    target_input.parent().prepend(autoCompleteInput);
+  //  Add Addres Auto Complete Input Markdown
+  var autoCompleteInput = '<small id="accStatusHelper" class="form-text text-muted mb-1 mt-3"><span id="aac-status">'+ STPH_addressAutoComplete.lang.aac_status_default +'</span></small></small><div style="padding-right:10%;" class="input-group mb-3"><div class="input-group-prepend"><span class="input-group-text" id="basic-addon1"><i class="fas fa-map-marker-alt"></i></span></div><input value="'+target_input.val()+'" id="address-auto-complete-' + STPH_addressAutoComplete.target + '" type="text" class="form-control address-auto-complete-input" placeholder="" aria-label="Address" aria-describedby="basic-addon1"><small id="autoCompleteHelp" class="form-text text-muted"><span id="aac-selection"></span><br><span id="aac-meta">Meta: <span id="aac-meta-preview"></span></span></small></div>';
+  target_input.parent().prepend(autoCompleteInput);
     
-    //  Target new input
-    var target_input_aac = $('#'+STPH_addressAutoComplete.target+'-tr').find('input#address-auto-complete-'+STPH_addressAutoComplete.target);
+  //  Set Target of Address Auto Complete Input
+  var target_input_aac = $('#'+STPH_addressAutoComplete.target+'-tr').find('input#address-auto-complete-'+STPH_addressAutoComplete.target);
 
-    target_input_aac.on("change", function(){
-      console.log($(this).val());
-    })
+  //  Pre-Populate if there is a value
+  if(target_input.val().length> 0) {
+  
+    var ui = {};
+    var item = {};
+    item.label = target_input.val(); 
+    var meta = {};    
+    meta.id = 1;
+    meta.x = 2;
+    meta.y = 3;
 
+    item.meta = meta;
+    ui.item = item;
 
-     // Auto-Complete with API as Source
-     target_input_aac.autocomplete({
+    STPH_addressAutoComplete.set_aac_status( target_input_aac, "is-valid", ui );
+
+  }
+
+  //  Register Event Listener: Change
+  target_input_aac.on("change", function(){
+
+    var value = $(this).val();
+    if(value != sessionStorage.getItem("aac-label"))  {
+    }
+    
+  });
+
+  //  Register Event Listener: Input
+  target_input_aac.on("input", function(){
+
+    //  Reset on empty
+    if( $(this).val() == "") {
+      STPH_addressAutoComplete.set_aac_status( $(this), "default" );
+    }
+
+  });
+
+  //  Register Event Listener: Focusout
+  target_input_aac.on("focusout", function(){
+
+    //  Notify user if selection has not been processed and set back to initial value!
+    if($(this).val() != target_input.val() && target_input.val() != "") {
+      console.log("not same");
+    }
+
+    if($(this).val() != target_input.val() && target_input.val() == "") {
+      $(this).val("");
+      STPH_addressAutoComplete.set_aac_status( $(this), "default" );
+      alert(STPH_addressAutoComplete.lang.alert_no_selection);
+    }
+    //console.log(sessionStorage.getItem("aac-label"));
+  })
+
+  //  Register Autocomplete 
+  target_input_aac.autocomplete({
+
+    //  Start search after min length
+    minLength: 5,
+
+    //  Set Source from external REST API
+    source: function(request, response) {
+
+      //  Docs: http://api3.geo.admin.ch/services/sdiservices.html#search
+      var base_url = "http://api3.geo.admin.ch/rest/services/api/SearchServer?type=locations&origins=address&limit=20&searchText=";
+      var full_url = base_url + request.term;
       
-      source: function(request, response) {
+      $.getJSON( full_url, {}, function(data){
+        //  Map Results
+        var mappedResults = STPH_addressAutoComplete.mapResults(data.results);
+        response(mappedResults);
+      });
 
-        var geo_api_url = "http://api3.geo.admin.ch/rest/services/api/SearchServer?type=locations&origins=address&limit=20&searchText=";
-        //var searchText = "Socinstrasse";
+    },    
 
+    //  Set Search Actions
+    search: function(event, ui) { 
 
-        $.getJSON( geo_api_url + request.term, {}, function(data){
-          //  Map Results
-          var mappedResults = STPH_addressAutoComplete.mapResults(data.results)
-          console.log(mappedResults);
-          response(mappedResults);
-        });
+      STPH_addressAutoComplete.set_aac_status(
+        $(this), 
+        "is-loading"
+      );
+    },
 
-      },
-      minLength: 5,
-      select: function( event, ui ) {
-        var meta = ui.item.meta;
-        console.log(ui.item.meta);
-        $('#aac-status').html('<i>' +  ui.item.label + '</i>');
-        $('#aac-meta-preview').html("id  = " + meta.id + " x = " + meta.x + " y = "+ meta.y);
-        $('#aac-meta').show();
-        target_input_aac.removeClass("is-not-listed").addClass("is-valid");
-      }
+    //  Set Response Actions
+    response: function(event, ui){
 
-    });
-
-    //  Set Session Storage
-    //STPH_addressAutoComplete.setSessionStorage();
+      STPH_addressAutoComplete.set_aac_status( 
+        $(this), 
+        "is-listing",
+        ui
+      );
+    },
     
-    //  Transform into Autocomplete field
-    //STPH_addressAutoComplete.transformToAutoCompleteField(target_input_aac);
+    //  Set Select Actions
+    select: function( event, ui ) {
 
+      STPH_addressAutoComplete.set_aac_status(
+        target_input_aac, 
+        "is-valid", 
+        ui
+      );
+
+      target_input.val(ui.item.label);
+    }
+
+  });
+
+}
+
+STPH_addressAutoComplete.set_aac_status = function(target, status, ui=null) {
+
+  var aac_input = $('#'+STPH_addressAutoComplete.target+'-tr').find('input#address-auto-complete-'+STPH_addressAutoComplete.target);
+  var aac_status = $('#aac-status');
+  var aac_selection = $('#aac-selection');
+
+  if(status == "default") {
+
+    aac_status.text(STPH_addressAutoComplete.lang.aac_status_default);
+    aac_selection.html("");
+    $('#aac-meta').hide();
+
+    target.removeClass("is-valid is-not-listed is-listed");
+    sessionStorage.removeItem("aac-label");
+
+  }
+
+  if(status == "is-loading") {
+   
+    aac_status.text(STPH_addressAutoComplete.lang.aac_status_is_loading);
+
+    target.removeClass("is-not-listed is-valid");
+    target.addClass("is-loading");
+
+
+  }
+
+  if(status == "is-listing") {
+
+    target.removeClass("is-loading is-listed is-not-listed");
+
+    var content = ui.content;
+    if(content.length > 0) {    
+      target.addClass("is-listed");
+
+    } else {
+      
+      target.addClass("is-not-listed");
+      aac_status.text(STPH_addressAutoComplete.lang.aac_status_is_not_listed);
+    }
+
+
+  }
+
+  if(status == "is-valid") {
+
+    //aac_input.autocomplete("disable");
+    aac_input.prop("disabled", true);
+
+    var item = ui.item;
+    aac_status.html(STPH_addressAutoComplete.lang.aac_status_is_valid + '<a onclick="STPH_addressAutoComplete.resetAAC(STPH_addressAutoComplete.target)" class="aac-reset-btn" href="#reset-selected-address">Reset Address</a>');
+    aac_selection.html('<i>' +  item.label + '</i>');
+    $('#aac-meta-preview').text("id  = " + item.meta.id + " x = " + item.meta.x + " y = "+ item.meta.y);   
+    $('#aac-meta').show();
+
+    target.removeClass("is-not-listed is-listed").addClass("is-valid");
+    sessionStorage.setItem('aac-label', item.label);
+  }
+
+}
+
+STPH_addressAutoComplete.resetAAC = function(target) {
+  var target_input = $('#'+target+'-tr').find('input');
+  var target_input_aac = $('#'+target+'-tr').find('input#address-auto-complete-'+target);
+  target_input_aac.val("");
+  target_input.val("");
+  target_input_aac.prop("disabled", false);
+  target_input_aac.autocomplete("enable");
+
+  STPH_addressAutoComplete.set_aac_status(target_input_aac, "default");
+  target_input_aac.focus();
 }
 
 STPH_addressAutoComplete.mapResults = function(results) {
@@ -96,44 +232,4 @@ STPH_addressAutoComplete.mapResults = function(results) {
     return rObj;
 
   });    
-}
-
-STPH_addressAutoComplete.transformToAutoCompleteField = function(target) {
-
-    target.autocomplete({
-      source: JSON.parse( sessionStorage.getItem('availableTags') )
-    });
-}
-
-
-
-STPH_addressAutoComplete.setSessionStorage = function () {
-
-  var availableTags = [
-    "ActionScript",
-    "AppleScript",
-    "Asp",
-    "BASIC",
-    "C",
-    "C++",
-    "Clojure",
-    "COBOL",
-    "ColdFusion",
-    "Erlang",
-    "Fortran",
-    "Groovy",
-    "Haskell",
-    "Java",
-    "JavaScript",
-    "Lisp",
-    "Perl",
-    "PHP",
-    "Python",
-    "Ruby",
-    "Scala",
-    "Scheme"
-  ];
-
-  sessionStorage.setItem('availableTags', JSON.stringify(availableTags));
-
 }
