@@ -31,48 +31,110 @@
 
     "project-settings": [
         {
-            "key": "target-field",
-            "type": "field-list",
-            "name": "Select target field to be transformed into Address Auto-Complete"
+            "key": "api-source",
+            "type": "dropdown",
+            "name": "<b>API Source</b>",
+            "choices": [
+                {
+                    "name": "geo.admin.ch",
+                    "value": "geo.admin.ch"
+                }
+            ],
+            "required": true
         },
         {
-            "key": "target-fields",
-            "type": "sub_settings",
-            "name": "Add a target field",
-            "sub_settings": [
-                {
-                    "key":"field-name",
-                    "type": "field-list",
-                    "name": "Field Name"
-                },
-                {
-                    "key":"meta-data",
-                    "type": "sub_settings",
-                    "name": "Meta Data",
-                    "sub_settings": [
-                        {
-                            "key":"output",
-                            "type": "dropdown",
-                            "name": "Output",
-                            "choices": [
-                                {
-                                    "name": "x",
-                                    "value": "x"
-                                },
-                                {
-                                    "name": "y",
-                                    "value": "y"
-                                }
-                            ]
-                        },
-                        {
-                            "key": "meta-field",
-                            "type": "field-list",
-                            "name": "Meta Field name"
-                        }
-                    ]
-                }
-            ]
+            "key": "api-limit",
+            "type": "text",
+            "name": "API Limit<br><i>Default & Max: 20</i>",
+            "branchingLogic": {
+                "field": "api-source",
+                "op": "<>",
+                "value": ""
+            }
+        },
+        {
+            "key": "api-key",
+            "type": "text",
+            "name": "API Key",
+            "branchingLogic": {
+                "field": "api-source",
+                "op": "<>",
+                "value": ""
+            }
+        },        
+        {
+            "key": "enable-for-data-entry",
+            "type": "checkbox",
+            "name": "Enable for Data Entry",
+            "branchingLogic": {
+                "field": "api-source",
+                "op": "<>",
+                "value": ""
+            }
+        },
+        {
+            "key": "enable-for-survey",
+            "type": "checkbox",
+            "name": "Enable for Survey",
+            "branchingLogic": {
+                "field": "api-source",
+                "op": "<>",
+                "value": ""
+            }
+        },        
+        {
+            "key": "target-field",
+            "type": "field-list",
+            "name": "<b>Target Field</b><br>Select target field to be transformed into Address Auto-Complete",
+            "required": true,
+            "branchingLogic": {
+                "field": "api-source",
+                "op": "<>",
+                "value": ""
+            }
+        },
+        {
+            "key": "target-meta",
+            "type": "field-list",
+            "name": "Target Meta<br>Select meta field where meta information should be saved",
+            "branchingLogic": {
+               "conditions": [
+                   {
+                    "field": "api-source",
+                    "op": "<>",
+                    "value": ""
+                   },
+                   {
+                    "field": "target-field",
+                    "op": "<>",
+                    "value": ""
+                   }
+               ]
+            }
+        },
+        {
+            "key": "output-format",
+            "type": "string",
+            "name": "Custom output format<br>Use <i>%PLACEHOLDER%</i> to refer to address parts.<br><i>Default: <code>%STREET% %NO%, %CODE% %PLACE%</code></i>",
+            "branchingLogic": {
+                "conditions": [
+                    {
+                     "field": "api-source",
+                     "op": "<>",
+                     "value": ""
+                    },
+                    {
+                     "field": "target-field",
+                     "op": "<>",
+                     "value": ""
+                    }
+                ]
+            }
+        },
+        {
+            "key": "javascript-debug",
+            "type": "checkbox",
+            "name": "Enable Javascript Debug"
         }
     ],
 

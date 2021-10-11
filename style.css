@@ -48,6 +48,13 @@
     margin-right:10%;
 }
 
+#aac-custom-address-btn {
+    font-size: 90%!important;
+    text-decoration: underline!important;
+    float:right;
+    margin-right:10%;
+}
+
 .aac-list-footer {
     position: absolute;
     background: white;
@@ -56,5 +63,8 @@
     font-style: italic;
     color: lightslategray;
     padding-right: 7px;
+    border-bottom: 1px solid lightgray;
+    border-left: 1px solid lightgray;
+    border-right: 1px solid lightgray;
 }
 

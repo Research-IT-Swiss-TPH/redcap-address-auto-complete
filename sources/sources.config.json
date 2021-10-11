@@ -1,0 +1,22 @@
+{
+    "sources": [
+        {
+            
+            "identifier": "geo.admin.ch",
+            "description": "geo.admin.ch is the geographical information platform of the Swiss Confederation within the Federal Administration",
+            "country": "Switzerland",
+
+            "url": "http://api3.geo.admin.ch",
+            "endpoint": "/rest/services/api/SearchServer?type=locations&origins=address",
+            "limit": "limit",
+            "term": "searchText",
+            "token": "token",
+            "logo-svg": "",
+            "documentation": "http://api3.geo.admin.ch/services/sdiservices.html#search"
+        },
+        {
+            "identifier": "geo.api.uk",
+            "description": "This is a test"
+        }
+    ]
+}
