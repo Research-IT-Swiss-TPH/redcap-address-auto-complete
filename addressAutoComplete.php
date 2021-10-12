@@ -20,7 +20,7 @@ class addressAutoComplete extends \ExternalModules\AbstractExternalModule {
     private $outputFormat;
 
     private $isEnabledForDataEntry;
-    private $isEnabledForDesign;
+    private $isEnabledForSurvey;
 
    /**
     * Constructs the class
@@ -56,10 +56,10 @@ class addressAutoComplete extends \ExternalModules\AbstractExternalModule {
 
     }
 
-    public function redcap_survey_page()  {
-
-        if(!$this->isEnabledForSurvey) {
-            dump("HELLO WORLD");
+    function redcap_survey_page_top()  {
+        
+        if($this->isEnabledForSurvey) {
+            $this->renderModule();
         }
 
     }

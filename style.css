@@ -1,7 +1,9 @@
-
 .address-auto-complete-input {
     width:auto!important;
+}
 
+form#form input[type="text"].address-auto-complete-input {
+    height: auto!important;
 }
 
 .form-control.address-auto-complete-input:focus {
