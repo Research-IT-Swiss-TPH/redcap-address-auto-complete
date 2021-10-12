@@ -3,7 +3,7 @@
 
     "namespace": "STPH\\addressAutoComplete", 
 
-    "description": "Another module made with create-redcap-module.",
+    "description": "<b>Please note that currenlty supported countries are: Switzerland.</b><br>Easily create Auto-Complete Address fields that fetch results from APIs. Additionally, save geo data in custom variables and adjust the format of the address label.",
 
     "documentation": "README.md",
 
@@ -42,8 +42,8 @@
                     "value": "geo.admin.ch"
                 },
                 {
-                    "name": "geo.api.uk",
-                    "value": "geo.api.uk"
+                    "name": "your.api.here",
+                    "value": "your.api.here"
                 }
             ],
             "required": true
@@ -113,7 +113,7 @@
         {
             "key": "target-meta",
             "type": "field-list",
-            "name": "Target Meta<br>Select meta field where meta information should be saved",
+            "name": "Target Meta<br>Select meta field where additional geo information should be saved",
             "branchingLogic": {
                "conditions": [
                    {

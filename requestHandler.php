@@ -14,7 +14,7 @@ if ($_REQUEST['action'] == 'mapResults') {
     $module->mapResults($source, $results);
 }
 
-if($_REQUEST['action'] == 'getConfigDescription') {
+else if($_REQUEST['action'] == 'getConfigDescription') {
     $pid = htmlentities($_POST["pid"]);
     $source = htmlentities($_POST["source"]);
 

@@ -20,6 +20,7 @@ class addressAutoComplete extends \ExternalModules\AbstractExternalModule {
     private $lang;
     private $outputFormat;
 
+    private $isSourceValid;
     private $isEnabledForDataEntry;
     private $isEnabledForSurvey;
 
@@ -38,7 +39,7 @@ class addressAutoComplete extends \ExternalModules\AbstractExternalModule {
        $this->lang = [];
        $this->outputFormat = "";
 
-       $this->isConfigInvalid = false;
+       $this->isSourceValid = false;
        $this->isEnabledForDataEntry = false;
        $this->isEnabledForSurvey = false;
     }
@@ -122,6 +123,11 @@ class addressAutoComplete extends \ExternalModules\AbstractExternalModule {
         }
 
         $this->api_source = $this->getProjectSetting("api-source");
+
+        if($this->api_source != "your.api.here") {
+            $this->isSourceValid = true;
+        }
+
         $this->api_limit = $this->getProjectSetting("api-limit");
 
         $this->api_config = $this->getSourceConfig();
@@ -186,9 +192,11 @@ class addressAutoComplete extends \ExternalModules\AbstractExternalModule {
     */
     private function renderModule() {
 
-        $this->setLanguageStrings();
-        $this->includeJavascript();
-        $this->includeCSS();
+        if($this->isSourceValid) {
+            $this->setLanguageStrings();
+            $this->includeJavascript();
+            $this->includeCSS();
+        }
 
     }
 

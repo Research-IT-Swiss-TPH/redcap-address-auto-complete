@@ -11,8 +11,8 @@
             "token": "token"
         },
         {
-            "identifier": "geo.api.uk",
-            "description": "Foo Bar ölaöaöaööaöa"
+            "identifier": "your.api.here",
+            "description": "If you would like to add your own API please make a Pull Request via Github. More information can be found in the docs."
         }
     ]
 }
