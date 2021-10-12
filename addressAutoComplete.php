@@ -65,6 +65,55 @@ class addressAutoComplete extends \ExternalModules\AbstractExternalModule {
 
     }
 
+    function redcap_module_configuration_settings($project_id, $settings) {
+        if($project_id != null) {
+
+            foreach ($settings as $key => &$setting) {
+                if( $setting["key"] == "api-description") {
+                    $setting["name"] = '<div data-pid="'.$project_id.'" data-url="'.$this->getUrl("requestHandler.php").'" style="padding:15px;display:inline-block;" id="api-description-wrapper">'.$this->generate_config_description($project_id).'</div><script src='.$this->getUrl("js/config.js").'></script>';
+                }
+            }
+
+        }
+        return $settings;
+
+    }
+
+    private function generate_config_description ($pid, $source=null) {
+        if($source == null) {
+            $this->api_source = $this->getProjectSetting("api-source", $pid);
+        } else {
+            $this->api_source = $source;
+        }
+        $config = $this->getSourceConfig();
+        $base64 = $this->getApiLogoAsBase64();
+        $html_logo = "";
+        $html_identifier = "<b>".$this->api_source."</b>";
+        $html_description = "<p>".$config->description."</p>";
+        $html_documentation = "";
+
+        if($base64) {
+            $html_logo = "<image src='data:image/svg+xml;base64, ".$base64."' width='30' alt='api-logo' style='margin-right:20px;'>";            
+        }
+
+        if(!empty($config->documentation)) {
+            $html_documentation = "<a target='_blank' href='".$config->documentation."'><i class='fas fa-book'></i> API Documentation</a>";
+        }
+
+        return $html_logo . $html_identifier . $html_description . $html_documentation;
+
+    }
+
+    
+    public function getConfigDescription($pid, $source) {
+        header('Content-Type: application/json; charset=UTF-8');
+
+        $html = $this->generate_config_description($pid, $source);
+        $response = ["html"=>$html];
+
+        echo json_encode($response);
+    }
+
     private function setSettings() {
 
         //  Check if target field is of type text (also checks if field has been set)
@@ -76,7 +125,7 @@ class addressAutoComplete extends \ExternalModules\AbstractExternalModule {
         $this->api_limit = $this->getProjectSetting("api-limit");
 
         $this->api_config = $this->getSourceConfig();
-
+        
         $this->target_field = $this->getProjectSetting("target-field");
         $this->target_meta = $this->getProjectSetting("target-meta");
 
@@ -90,14 +139,14 @@ class addressAutoComplete extends \ExternalModules\AbstractExternalModule {
 
     private function getSourceConfig() {
 
-        $json = file_get_contents( __DIR__ ."/sources/sources.config.json");
+        $json = file_get_contents( __DIR__ ."/sources/sources.json");
         $parsed = json_decode($json);
 
         $filtered = array_filter($parsed->sources, function($el){
             return $el->identifier == $this->api_source;
         });
 
-        return $filtered[0];
+        return reset($filtered);
 
     }
 
@@ -121,8 +170,13 @@ class addressAutoComplete extends \ExternalModules\AbstractExternalModule {
     }
 
     private function getApiLogoAsBase64() {
-        $content = file_get_contents(__DIR__ . "/sources/img/" . $this->api_source . ".svg");        
-        return base64_encode($content);
+        $content = file_get_contents(__DIR__ . "/sources/img/" . $this->api_source . ".svg");
+        
+        if($content) {
+            return base64_encode($content);
+        }
+
+        return false;
     }
 
    /**

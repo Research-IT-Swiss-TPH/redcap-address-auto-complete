@@ -1,9 +1,8 @@
 {
     "sources": [
-        {
-            
+        {           
             "identifier": "geo.admin.ch",
-            "description": "geo.admin.ch is the geographical information platform of the Swiss Confederation within the Federal Administration",
+            "description": "<i>geo.admin.ch</i> is the geographical information platform of the Swiss Confederation within the Federal Administration. The usage is free but throttled to a maximum amount of requests per time. It is possible though to obtain higher API priviliges by submitting an application.",
             "documentation": "http://api3.geo.admin.ch/services/sdiservices.html#search",
             "url": "http://api3.geo.admin.ch",
             "endpoint": "/rest/services/api/SearchServer?type=locations&origins=address",
@@ -13,7 +12,7 @@
         },
         {
             "identifier": "geo.api.uk",
-            "description": "This is a test"
+            "description": "Foo Bar ölaöaöaööaöa"
         }
     ]
 }

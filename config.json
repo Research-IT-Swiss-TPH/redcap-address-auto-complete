@@ -19,7 +19,8 @@
 
     "permissions": [
         "redcap_every_page_top",
-        "redcap_survey_page_top"
+        "redcap_survey_page_top",
+        "redcap_module_configuration_settings"
     ],
 
     "enable-every-page-hooks-on-system-pages": false,
@@ -39,14 +40,29 @@
                 {
                     "name": "geo.admin.ch",
                     "value": "geo.admin.ch"
+                },
+                {
+                    "name": "geo.api.uk",
+                    "value": "geo.api.uk"
                 }
             ],
             "required": true
         },
         {
+            "key": "api-description",
+            "type": "descriptive",
+            "name": "",
+            "branchingLogic": {
+                "field": "api-source",
+                "op": "<>",
+                "value": ""
+            }
+
+        },
+        {
             "key": "api-limit",
             "type": "text",
-            "name": "API Limit<br><i>Default & Max: 20</i>",
+            "name": "API Response Limit<br><small>Defines how may results are returned per search request. This can significantly affect performance. Default and maximum are set to <code>20</code>.</small>",
             "branchingLogic": {
                 "field": "api-source",
                 "op": "<>",
@@ -56,7 +72,7 @@
         {
             "key": "api-key",
             "type": "text",
-            "name": "API Key",
+            "name": "API Key<br><small>An API key can be used to have higher priviliges, such as performing more requests per time. In general API keys are obtained by application.</small>",
             "branchingLogic": {
                 "field": "api-source",
                 "op": "<>",
