@@ -3,6 +3,8 @@
 
 Redcap Module that helpts you to easily create Auto-Complete Address fields that fetch results from APIs. Additionally, save geo data in custom variables and adjust the format of the address label.
 
+![Demo](address_auto_complete_demo.gif)
+
 ## Setup
 
 Install the module from REDCap module repository and enable over Control Center.
