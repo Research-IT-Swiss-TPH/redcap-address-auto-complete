@@ -14,6 +14,7 @@ class addressAutoComplete extends \ExternalModules\AbstractExternalModule {
 
     private $api_source;
     private $api_config;
+    private $api_logo;
     private $target_field;
     private $target_meta;
     private $lang;
@@ -119,6 +120,11 @@ class addressAutoComplete extends \ExternalModules\AbstractExternalModule {
 
     }
 
+    private function getApiLogoAsBase64() {
+        $content = file_get_contents(__DIR__ . "/sources/img/" . $this->api_source . ".svg");        
+        return base64_encode($content);
+    }
+
    /**
     * Renders the module
     *
@@ -202,6 +208,7 @@ class addressAutoComplete extends \ExternalModules\AbstractExternalModule {
                     STPH_addressAutoComplete.target_meta = '<?= $this->target_meta ?>';
                     STPH_addressAutoComplete.outputFormat = '<?= $this->outputFormat ?>';
                     STPH_addressAutoComplete.base_url = '<?= $this->getBaseUrl() ?>';
+                    STPH_addressAutoComplete.base64_logo = '<?= $this->getApiLogoAsBase64() ?>'
                     STPH_addressAutoComplete.source_identifier = '<?= $this->api_config->identifier ?>';
                     STPH_addressAutoComplete.requestHandlerUrl = '<?= $this->getUrl("requestHandler.php") ?>';
                     STPH_addressAutoComplete.lang = <?php print json_encode($this->lang) ?>;

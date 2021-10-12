@@ -132,8 +132,9 @@ STPH_addressAutoComplete.init = function() {
       var left = list.position().left;
       var top = list.position().top + list.outerHeight();
       //  Get API Source Logo
+      var base64img = '<image style="margin-right:5px;" src="data:image/svg+xml;base64,' + STPH_addressAutoComplete.base64_logo + '" alt="api-logo" width="10">';
   
-      $('<div style="left:'+left+'px;top:'+top +'px;width:'+width+'px;" class="aac-list-footer">'+STPH_addressAutoComplete.source_identifier+'</div>').insertAfter(list);
+      $('<div style="left:'+left+'px;top:'+top +'px;width:'+width+'px;" class="aac-list-footer">'+ base64img +STPH_addressAutoComplete.source_identifier+'</div>').insertAfter(list);
 
       STPH_addressAutoComplete.log("Auto-Complete list opened.")
 
