@@ -3,7 +3,7 @@
 
     "namespace": "STPH\\addressAutoComplete", 
 
-    "description": "<b>Please note that currenlty supported countries are: Switzerland.</b><br>Easily create Auto-Complete Address fields that fetch results from APIs. Additionally, save geo data in custom variables and adjust the format of the address label.",
+    "description": "<b>Please note that currently supported countries are: Switzerland.</b><br>Easily create Auto-Complete Address fields that fetch results from APIs. Additionally, save geo data in custom variables and adjust the format of the address label.",
 
     "documentation": "README.md",
 

@@ -224,7 +224,7 @@ STPH_addressAutoComplete.setState = function(state, ui=null) {
     aac_input.prop("disabled", true);
 
     var item = ui.item;
-    aac_status.html(STPH_addressAutoComplete.lang.aac_status_is_valid + '<a onclick="STPH_addressAutoComplete.resetFields()" class="aac-reset-btn" href="#reset-selected-address">Reset Address</a>');
+    aac_status.html(STPH_addressAutoComplete.lang.aac_status_is_valid + '<a onclick="STPH_addressAutoComplete.resetFields()" class="aac-reset-btn" href="#reset-selected-address">'+STPH_addressAutoComplete.lang.aac_reset_address+'</a>');
     aac_selection.html('<i>' +  item.label + '</i>');
     //$('#aac-meta-preview').text("id  = " + item.meta.id + " x = " + item.meta.x + " y = "+ item.meta.y);   
     //$('#aac-meta').show();

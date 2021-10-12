@@ -1,5 +1,5 @@
 # Address Auto Complete
-**Please note that currenlty supported countries are: Switzerland.**
+**Please note that currently supported countries are: Switzerland.**
 
 Redcap Module that helpts you to easily create Auto-Complete Address fields that fetch results from APIs. Additionally, save geo data in custom variables and adjust the format of the address label.
 
@@ -20,7 +20,7 @@ Install the module from REDCap module repository and enable over Control Center.
 - Custom output format: Use <i>%PLACEHOLDER%</i> to refer to address parts. <i>Default: <code>%STREET% %NO%, %CODE% %PLACE%</code></i>
 - Enable Javascript Debug: Shows Log Messages in Javascript Console.
 
-## Add your API
+## Add your API source
 
 *Requirements for APIs*
 
@@ -36,7 +36,7 @@ If you want to add your own API, please make a Pull Request that includes the fo
 - `/sources/img/your.api.svg`: Optionally, add a logo of the API in svg format. 
 
 
-If you cannot make the development yourself, but have found a useful API, please open a Github Issue with all needed information.
+If you cannot make the development yourself, but have found a useful API, please [open a Github Issue](https://github.com/tertek/redcap-address-auto-complete/issues) describing the details about the API source to be added.
 
 ## Available APIs
 
@@ -44,23 +44,11 @@ Identifier    | Country
 ------------- | --------------------
 geo.admin.ch  | Switzerland
 
-## Psalm
-
-Run Psalm Taint Analysis to check for vulnerabilites:
-
-```bash
-   ./vendor/bin/psalm --no-diff --taint-analysis
-``` 
-
-`--no-diff` is practical if you run Psalm multiple times without differences in the file.
-Read more about Psalm in the official [Psalm Manual](https://psalm.dev/docs/).
 
 ## Roadmap
 
-- Feature 1
-- Feature 2
-
-## Developer Notice
+- Improve Source Validation before Module render.
+- Add manual address insertion feature.
 
 ## Changelog
 
