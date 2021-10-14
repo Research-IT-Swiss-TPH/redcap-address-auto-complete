@@ -102,9 +102,10 @@ class addressAutoComplete extends \ExternalModules\AbstractExternalModule {
     * @since 1.0.0
     *
     */        
-    function redcap_module_configuration_settings($project_id, $settings) : array {
-        if($project_id != null) {
 
+    function redcap_module_configuration_settings($project_id, $settings) : array {
+        
+        if($project_id != null) {
             foreach ($settings as &$setting) {
                 if( $setting["key"] == "api-description") {
                     $setting["name"] = '<div data-pid="'.$project_id.'" data-url="'.$this->getUrl("requestHandler.php").'" style="padding:15px;display:inline-block;" id="api-description-wrapper">'.$this->generate_config_description($project_id).'</div><script src='.$this->getUrl("js/config.js").'></script>';
@@ -116,7 +117,6 @@ class addressAutoComplete extends \ExternalModules\AbstractExternalModule {
 
     }
 
-
    /**
     * Generates config description
     *
@@ -127,11 +127,18 @@ class addressAutoComplete extends \ExternalModules\AbstractExternalModule {
     *
     */      
     private function generate_config_description ($pid, $source=null): string {
+        
         if($source == null) {
+            $saved_source = $this->getProjectSetting("api-source", $pid);
+
+            if(empty($saved_source)) {
+                return "";
+            }
             $this->api_source = $this->getProjectSetting("api-source", $pid);
         } else {
             $this->api_source = $source;
         }
+
         $config = $this->getSourceConfig();
         $base64 = $this->getApiLogoAsBase64();
         $html_logo = "";
