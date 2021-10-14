@@ -12,17 +12,31 @@ if( file_exists("vendor/autoload.php") ){
 // Declare your module class, which must extend AbstractExternalModule 
 class addressAutoComplete extends \ExternalModules\AbstractExternalModule {
 
-    private string $api_source;
-    private object $api_config;
-    private string $api_logo;
-    private string $target_field;
-    private string $target_meta;
-    private array $lang;
-    private ?string $outputFormat;
+    /** @var string */    
+    private $api_source;
 
-    private bool $isSourceValid;
-    private bool $isEnabledForDataEntry;
-    private bool $isEnabledForSurvey;
+    /** @var object */ 
+    private $api_config;
+
+    /** @var string */    
+    private $target_field;
+
+    /** @var string */    
+    private $target_meta;
+
+    /** @var array */ 
+    private $lang;
+
+    private $outputFormat;
+
+    /** @var bool */    
+    private $isSourceValid;
+
+    /** @var bool */     
+    private $isEnabledForDataEntry;
+    
+    /** @var bool */
+    private $isEnabledForSurvey;
 
    /**
     * Constructs the class
@@ -48,7 +62,7 @@ class addressAutoComplete extends \ExternalModules\AbstractExternalModule {
    /**
     * Hooks Address Auto Complete module to redcap_every_page_top    
     *
-    * @param string $project_id
+    * @param string $project_id    
     * @since 1.0.0
     *
     */
