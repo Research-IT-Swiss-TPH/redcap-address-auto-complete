@@ -12,17 +12,17 @@ if( file_exists("vendor/autoload.php") ){
 // Declare your module class, which must extend AbstractExternalModule 
 class addressAutoComplete extends \ExternalModules\AbstractExternalModule {
 
-    private $api_source;
-    private $api_config;
-    private $api_logo;
-    private $target_field;
-    private $target_meta;
-    private $lang;
-    private $outputFormat;
+    private string $api_source;
+    private object $api_config;
+    private string $api_logo;
+    private string $target_field;
+    private string $target_meta;
+    private array $lang;
+    private ?string $outputFormat;
 
-    private $isSourceValid;
-    private $isEnabledForDataEntry;
-    private $isEnabledForSurvey;
+    private bool $isSourceValid;
+    private bool $isEnabledForDataEntry;
+    private bool $isEnabledForSurvey;
 
    /**
     * Constructs the class
@@ -33,7 +33,8 @@ class addressAutoComplete extends \ExternalModules\AbstractExternalModule {
         parent::__construct();
        // Other code to run when object is instantiated
        $this->api_source = "";
-       $this->api_config = [];
+       $this->api_logo = "";
+       $this->api_config = (Object)[];
        $this->target_field = "";
        $this->target_meta = "";
        $this->lang = [];
@@ -45,10 +46,14 @@ class addressAutoComplete extends \ExternalModules\AbstractExternalModule {
     }
 
    /**
-    * Hooks Address Auto Complete module to redcap_every_page_top
+    * Hooks Address Auto Complete module to redcap_every_page_top    
+    *
+    * @param string $project_id
+    * @since 1.0.0
     *
     */
-    public function redcap_every_page_top($project_id = null) {      
+    public function redcap_every_page_top($project_id = null) : void {    
+        
 
         $this->setSettings();
        
@@ -58,7 +63,14 @@ class addressAutoComplete extends \ExternalModules\AbstractExternalModule {
 
     }
 
-    function redcap_survey_page_top()  {
+
+   /**
+    * Hooks Address Auto Complete module to redcap_survey_page_top    
+    *
+    * @since 1.0.0
+    *
+    */    
+    function redcap_survey_page_top() : void  {
         
         if($this->isEnabledForSurvey) {
             $this->renderModule();
@@ -66,10 +78,20 @@ class addressAutoComplete extends \ExternalModules\AbstractExternalModule {
 
     }
 
-    function redcap_module_configuration_settings($project_id, $settings) {
+
+   /**
+    * Hooks into redcap_module_configuration_settings
+    *
+    * @param string $project_id
+    * @param array $settings
+    *
+    * @since 1.0.0
+    *
+    */        
+    function redcap_module_configuration_settings($project_id, $settings) : array {
         if($project_id != null) {
 
-            foreach ($settings as $key => &$setting) {
+            foreach ($settings as &$setting) {
                 if( $setting["key"] == "api-description") {
                     $setting["name"] = '<div data-pid="'.$project_id.'" data-url="'.$this->getUrl("requestHandler.php").'" style="padding:15px;display:inline-block;" id="api-description-wrapper">'.$this->generate_config_description($project_id).'</div><script src='.$this->getUrl("js/config.js").'></script>';
                 }
@@ -80,7 +102,17 @@ class addressAutoComplete extends \ExternalModules\AbstractExternalModule {
 
     }
 
-    private function generate_config_description ($pid, $source=null) {
+
+   /**
+    * Generates config description
+    *
+    * @param string $pid
+    * @param string $source
+    *
+    * @since 1.0.0
+    *
+    */      
+    private function generate_config_description ($pid, $source=null): string {
         if($source == null) {
             $this->api_source = $this->getProjectSetting("api-source", $pid);
         } else {
@@ -105,8 +137,17 @@ class addressAutoComplete extends \ExternalModules\AbstractExternalModule {
 
     }
 
-    
-    public function getConfigDescription($pid, $source) {
+
+   /**
+    * Returns config description via AJAX
+    *
+    * @param string $pid
+    * @param string $source
+    *
+    * @since 1.0.0
+    *
+    */
+    public function getConfigDescription($pid, $source): void {
         header('Content-Type: application/json; charset=UTF-8');
 
         $html = $this->generate_config_description($pid, $source);
@@ -115,7 +156,14 @@ class addressAutoComplete extends \ExternalModules\AbstractExternalModule {
         echo json_encode($response);
     }
 
-    private function setSettings() {
+   /**
+    * Sets settings
+    *
+    *
+    * @since 1.0.0
+    *
+    */     
+    private function setSettings() : void {
 
         //  Check if target field is of type text (also checks if field has been set)
         if( REDCap::getFieldType($this->getProjectSetting("target-field")) != "text") {
@@ -143,7 +191,14 @@ class addressAutoComplete extends \ExternalModules\AbstractExternalModule {
         $this->debug = $this->getProjectSetting("javascript-debug") == true;
     }
 
-    private function getSourceConfig() {
+   /**
+    * Parses Sources from json
+    *
+    *
+    * @since 1.0.0
+    *
+    */         
+    private function getSourceConfig() : object {
 
         $json = file_get_contents( __DIR__ ."/sources/sources.json");
         $parsed = json_decode($json);
@@ -156,7 +211,14 @@ class addressAutoComplete extends \ExternalModules\AbstractExternalModule {
 
     }
 
-    private function getBaseUrl() {
+   /**
+    * Gets Base Url from config
+    *
+    *
+    * @since 1.0.0
+    *
+    */         
+    private function getBaseUrl(): string {
 
         $config = $this->api_config;
         $api_limit_string = '&'.$config->limit.'=20';
@@ -175,8 +237,16 @@ class addressAutoComplete extends \ExternalModules\AbstractExternalModule {
 
     }
 
+   /**
+    * Generates config description
+    *
+    * @return false|string
+    * @since 1.0.0
+    *
+    */
     private function getApiLogoAsBase64() {
-        $content = file_get_contents(__DIR__ . "/sources/img/" . $this->api_source . ".svg");
+        $path = $this->getSafePath(__DIR__ . "/sources/img/" . $this->api_source . ".svg");
+        $content = file_get_contents($path);
         
         if($content) {
             return base64_encode($content);
@@ -186,11 +256,13 @@ class addressAutoComplete extends \ExternalModules\AbstractExternalModule {
     }
 
    /**
-    * Renders the module
-    *
-    * @since 1.0.0
-    */
-    private function renderModule() {
+     * Renders the module
+     *
+     * @since 1.0.0
+     *
+     * @return void
+     */
+    private function renderModule(): void {
 
         if($this->isSourceValid) {
             $this->setLanguageStrings();
@@ -201,11 +273,13 @@ class addressAutoComplete extends \ExternalModules\AbstractExternalModule {
     }
 
    /**
-    * Set Language Strings
-    *
-    * @since 1.0.0
-    */    
-    private function setLanguageStrings() {
+     * Set Language Strings
+     *
+     * @since 1.0.0
+     *
+     * @return void
+     */
+    private function setLanguageStrings(): void {
 
         $this->lang = array(
             "aac_status_default" => $this->tt("aac_status_default"),
@@ -220,21 +294,36 @@ class addressAutoComplete extends \ExternalModules\AbstractExternalModule {
     }
 
    /**
-    * Maps Results via Ajax Request
-    *
-    * @since 1.0.0
-    */    
-    public function mapResults($source, $results) {
+     * Maps Results via Ajax Request
+     *
+     * @param string $source
+     * @param object $results
+     * @since 1.0.0
+     *
+     * @return void
+     */
+    public function mapResults($source, $results): void {
 
         header('Content-Type: application/json; charset=UTF-8');
-        $data = json_decode($results);
+        //$data = json_decode($results);
 
         //  Call mapper method by source
-        $response = $this->getMappedResultsBySource($source, $data);        
+        $response = $this->getMappedResultsBySource($source, $results);        
         echo json_encode($response);
     }
 
-    private function getMappedResultsBySource($identifier, $data) {
+
+
+   /**
+     * Get Mapped Results by Source
+     *
+     * @param string $identifier
+     * @param object $data
+     * 
+     * @since 1.0.0
+     *
+     */
+    private function getMappedResultsBySource($identifier, $data) : ?array {
 
         //  Replace dots with underscores
         $class = str_replace(".", "_", $identifier);
@@ -243,7 +332,8 @@ class addressAutoComplete extends \ExternalModules\AbstractExternalModule {
         $format = $this->getProjectSetting("output-format");
 
         //  Include class if not exists
-        if (!class_exists($class)) include_once( __DIR__ . "./sources/" . $class . ".source.php");
+        $path = $this->getSafePath(__DIR__ . "./sources/" . $class . ".source.php");
+        if (!class_exists($class)) include_once( $path );
 
         //  Dynamic class with namespaces and Argument Unpacking
         //  https://stackoverflow.com/a/30647705/3127170
@@ -257,11 +347,13 @@ class addressAutoComplete extends \ExternalModules\AbstractExternalModule {
 
   
    /**
-    * Include JavaScript files
-    *
-    * @since 1.0.0
-    */
-    private function includeJavascript() {
+     * Include JavaScript files
+     *
+     * @since 1.0.0
+     *
+     * @return void
+     */
+    private function includeJavascript(): void {
         ?>
         <script src="<?php print $this->getUrl('js/main.js'); ?>"></script>
         <script> 
@@ -286,11 +378,13 @@ class addressAutoComplete extends \ExternalModules\AbstractExternalModule {
 
     
    /**
-    * Include Style files
-    *
-    * @since 1.0.0    
-    */
-    private function includeCSS() {
+     * Include Style files
+     *
+     * @since 1.0.0    
+     *
+     * @return void
+     */
+    private function includeCSS(): void {
         ?>
         <link rel="stylesheet" href="<?= $this->getUrl('style.css')?>">
         <?php
