@@ -241,6 +241,7 @@ class addressAutoComplete extends \ExternalModules\AbstractExternalModule {
     */         
     private function getBaseUrl(): string {
 
+        $protocol = stripos($_SERVER['SERVER_PROTOCOL'],'https') === 0 ? 'https://' : 'http://';
         $config = $this->api_config;
         $api_limit_string = '&'.$config->limit.'=20';
         $api_token_string = '';
@@ -254,7 +255,7 @@ class addressAutoComplete extends \ExternalModules\AbstractExternalModule {
             $api_token_string = '&' . $config->token . '=' . $this->api_token;
         } 
 
-        return $config->url . $config->endpoint . $api_limit_string . $api_token_string . $api_term_string;
+        return $protocol . $config->url . $config->endpoint . $api_limit_string . $api_token_string . $api_term_string;
 
     }
 
