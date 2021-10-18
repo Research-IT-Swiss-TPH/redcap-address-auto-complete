@@ -68,7 +68,6 @@ class addressAutoComplete extends \ExternalModules\AbstractExternalModule {
     */
     public function redcap_every_page_top($project_id = null) : void {    
         
-
         $this->setSettings();
        
         if($this->isPage("DataEntry/index.php") && $this->isEnabledForDataEntry) {
@@ -241,7 +240,9 @@ class addressAutoComplete extends \ExternalModules\AbstractExternalModule {
     */         
     private function getBaseUrl(): string {
 
-        $protocol = stripos($_SERVER['SERVER_PROTOCOL'],'https') === 0 ? 'https://' : 'http://';
+        $isSecure = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') || $_SERVER['SERVER_PORT'] == 443;
+        $protocol = $isSecure ? 'https://' : 'http://';
+
         $config = $this->api_config;
         $api_limit_string = '&'.$config->limit.'=20';
         $api_token_string = '';
