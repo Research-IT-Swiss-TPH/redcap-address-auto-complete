@@ -355,7 +355,7 @@ class addressAutoComplete extends \ExternalModules\AbstractExternalModule {
         $format = $this->getProjectSetting("output-format");
 
         //  Include class if not exists
-        $path = $this->getSafePath(__DIR__ . "./sources/" . $class . ".source.php");
+        $path = $this->getSafePath( __DIR__ . "/sources/" . $class . ".source.php");
         if (!class_exists($class)) include_once( $path );
 
         //  Dynamic class with namespaces and Argument Unpacking
