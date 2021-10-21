@@ -198,6 +198,11 @@
             }
         },
         {
+            "key": "enable-custom-address",
+            "type": "checkbox",
+            "name": "Enable Custom Address"
+        },        
+        {
             "key": "javascript-debug",
             "type": "checkbox",
             "name": "Enable Javascript Debug"

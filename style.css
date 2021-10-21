@@ -70,3 +70,8 @@ form#form input[type="text"].address-auto-complete-input {
     border-right: 1px solid lightgray;
 }
 
+
+#custom-address-modal form#form input[type="text"] {
+    width: 100% !important;
+    max-width: 100% !important;
+}

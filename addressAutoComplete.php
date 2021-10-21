@@ -43,6 +43,9 @@ class addressAutoComplete extends \ExternalModules\AbstractExternalModule {
 
     /** @var bool */
     private $isEnabledAdvancedSave;
+    
+    /** @var bool */
+    private $isEnabledCustomAddress;
 
    /**
     * Constructs the class
@@ -66,6 +69,7 @@ class addressAutoComplete extends \ExternalModules\AbstractExternalModule {
        $this->isEnabledForSurvey = false;
 
        $this->isEnabledAdvancedSave = false;
+       $this->isEnabledCustomAddress = false;
     }
 
    /**
@@ -215,6 +219,7 @@ class addressAutoComplete extends \ExternalModules\AbstractExternalModule {
         $this->isEnabledForDataEntry = $this->getProjectSetting("enable-for-data-entry");
         $this->isEnabledForSurvey = $this->getProjectSetting("enable-for-survey");
         $this->isEnabledAdvancedSave = $this->getProjectSetting("enable-advanced-save");
+        $this->isEnabledCustomAddress = $this->getProjectSetting("enable-custom-address");
 
         if($this->isEnabledAdvancedSave) {
 
@@ -226,6 +231,7 @@ class addressAutoComplete extends \ExternalModules\AbstractExternalModule {
             );
 
         }
+
 
         $this->outputFormat = $this->getProjectSetting("output-format");
 
@@ -332,7 +338,16 @@ class addressAutoComplete extends \ExternalModules\AbstractExternalModule {
             "aac_status_is_listed" => $this->tt("aac_status_is_listed"),
             "aac_status_is_valid" => $this->tt("aac_status_is_valid"),
             "aac_reset_address" => $this->tt("aac_reset_address"),
-            "alert_no_selection" => $this->tt("alert_no_selection")
+            "alert_no_selection" => $this->tt("alert_no_selection"),
+            "cam_title" => $this->tt("cam_title"),
+            "cam_field_street" => $this->tt("cam_field_street"),
+            "cam_field_number" => $this->tt("cam_field_number"),
+            "cam_field_city" => $this->tt("cam_field_city"),
+            "cam_field_code" => $this->tt("cam_field_code"),
+            "cam_field_country" => $this->tt("cam_field_country"),
+            "cam_field_add_note" => $this->tt("cam_field_add_note"),
+            "cam_button_add" => $this->tt("cam_button_add"),
+            "cam_button_cancel" => $this->tt("cam_button_cancel")
         );
 
     }
@@ -411,9 +426,11 @@ class addressAutoComplete extends \ExternalModules\AbstractExternalModule {
                     STPH_addressAutoComplete.base64_logo = '<?= $this->getApiLogoAsBase64() ?>'
                     STPH_addressAutoComplete.source_identifier = '<?= $this->api_config->identifier ?>';
                     STPH_addressAutoComplete.requestHandlerUrl = '<?= $this->getUrl("requestHandler.php") ?>';
-                    STPH_addressAutoComplete.advancedSave = '<?= json_encode($this->isEnabledAdvancedSave) ?>';
-                    STPH_addressAutoComplete.lang = <?php print json_encode($this->lang) ?>;
-                    STPH_addressAutoComplete.debug = '<?= $this->debug ?>';
+                    STPH_addressAutoComplete.advancedSave = <?= json_encode($this->isEnabledAdvancedSave) ?>;
+                    STPH_addressAutoComplete.customAddress = <?= json_encode($this->isEnabledCustomAddress) ?>;
+                    STPH_addressAutoComplete.customAddressModalUrl = '<?= $this->getUrl("customAddressModal.html") ?>';
+                    STPH_addressAutoComplete.lang = <?= json_encode($this->lang) ?>;
+                    STPH_addressAutoComplete.debug = <?= json_encode($this->debug) ?>;
                     STPH_addressAutoComplete.init();
                 })
             });

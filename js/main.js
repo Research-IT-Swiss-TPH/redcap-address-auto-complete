@@ -50,6 +50,46 @@ STPH_addressAutoComplete.init = function() {
   //  Add Address Auto Complete Input Markdown
   var autoCompleteInput = '<small id="accStatusHelper" class="form-text text-muted mb-1 mt-3"><span id="aac-status">'+ STPH_addressAutoComplete.lang.aac_status_default +'</span></small></small><div style="padding-right:10%;" class="input-group mb-3"><div class="input-group-prepend"><span class="input-group-text" id="basic-addon1"><i class="fas fa-map-marker-alt"></i></span></div><input value="'+target_field.val()+'" id="address-auto-complete-' + STPH_addressAutoComplete.target_field + '" type="text" class="form-control address-auto-complete-input" placeholder="" aria-label="Address" aria-describedby="basic-addon1"><small id="autoCompleteHelp" class="form-text text-muted"><span id="aac-selection"></span><br><span id="aac-meta">Meta: <span id="aac-meta-preview"></span></span></small></div>';
   target_field.parent().prepend(autoCompleteInput);
+
+  //  Add Custom Address Modal Markdown (if enabled)
+  if(STPH_addressAutoComplete.customAddress) {
+
+    var customAddressModalWrapper = '<div id="custom-address-modal-wrapper"></div>';
+    $('body').prepend(customAddressModalWrapper);
+    //  Load Modal HTML into wrapper
+    $('#custom-address-modal-wrapper').load(STPH_addressAutoComplete.customAddressModalUrl, function() {
+      //  Add language Strings
+      var modal = $('#custom-address-modal');      
+      modal.find('.modal-title').text(STPH_addressAutoComplete.lang.cam_title);
+      modal.find('label[for=custom-street]').text(STPH_addressAutoComplete.lang.cam_field_street);
+      modal.find('label[for=custom-number]').text(STPH_addressAutoComplete.lang.cam_field_number);
+      modal.find('label[for=custom-city]').text(STPH_addressAutoComplete.lang.cam_field_city);
+      modal.find('label[for=custom-code]').text(STPH_addressAutoComplete.lang.cam_field_code);
+      modal.find('label[for=custom-country]').text(STPH_addressAutoComplete.lang.cam_field_country);
+      modal.find('label[for=custom-note]').text(STPH_addressAutoComplete.lang.cam_field_add_note);
+
+      //  Add event listener
+      $('#custom-address-form').on('submit', function(event) {
+        event.preventDefault();
+        var street = $('#custom-street').val();
+        var number = $('#custom-number').val();
+        var code = $('#custom-code').val();
+        var city = $('#custom-city').val();
+        var country = $('#custom-country').val();
+        var note = $('#custom-note').val();
+        
+        var customAddress = street + " " + number + ", " + city + " " + code + "-" + country + "" + note;
+                
+        var ui = {};
+        ui.item = customAddress;
+        STPH_addressAutoComplete.setState("is-custom", ui);        
+        target_field.val(customAddress);
+        $('#custom-address-modal').modal('hide');
+
+      });
+
+    });
+  }
     
   //  Set Target of Address Auto Complete Input
   var target_aac = $('#'+STPH_addressAutoComplete.target_field+'-tr').find('input#address-auto-complete-'+STPH_addressAutoComplete.target_field);
@@ -227,7 +267,7 @@ STPH_addressAutoComplete.setState = function(state, ui=null) {
 
     if(ui.content == null) {
       aac_input.addClass("is-not-listed");
-      aac_status.html(STPH_addressAutoComplete.lang.aac_status_is_not_listed + '<a style="display:none;" onclick="STPH_addressAutoComplete.addCustomAddress(STPH_addressAutoComplete.target_field)" class="no-focus-out" id="aac-custom-address-btn" href="#add-custom-address">Custom Address</a>');
+      aac_status.html(STPH_addressAutoComplete.lang.aac_status_is_not_listed + '<a style="" onclick="STPH_addressAutoComplete.addCustomAddress()" class="no-focus-out" id="aac-custom-address-btn" href="#add-custom-address">Custom Address</a>');
       STPH_addressAutoComplete.log("Nothing found.")
     } else if(ui.content.length > 0) {
       aac_input.addClass("is-listed");
@@ -247,6 +287,15 @@ STPH_addressAutoComplete.setState = function(state, ui=null) {
     //$('#aac-meta-preview').text("id  = " + item.meta.id + " x = " + item.meta.x + " y = "+ item.meta.y);   
     //$('#aac-meta').show();
     aac_input.removeClass("is-not-listed is-listed").addClass("is-valid");
+
+  }
+
+  if(state == "is-custom") {
+    aac_input.prop("disabled", true);
+    aac_input.val(ui.item);
+    aac_selection.html('<i>' +  ui.item + '</i>');
+    aac_input.removeClass("is-not-listed is-listed").addClass("is-valid");
+    aac_status.html(STPH_addressAutoComplete.lang.aac_status_is_custom + '<a style="" onclick="STPH_addressAutoComplete.addCustomAddress()" class="no-focus-out" id="aac-custom-address-btn" href="#add-custom-address">Custom Address</a>' + '<a onclick="STPH_addressAutoComplete.resetFields()" class="aac-reset-btn" href="#reset-selected-address">'+STPH_addressAutoComplete.lang.aac_reset_address+'</a>');
 
   }
 
@@ -285,7 +334,8 @@ STPH_addressAutoComplete.resetFields = function() {
 
 }
 
-STPH_addressAutoComplete.addCustomAddress = function(target) {
+STPH_addressAutoComplete.addCustomAddress = function() {
+  $('#custom-address-modal').modal('show');
   console.log("Trigger Modal to add custom address here..");
 }
 
