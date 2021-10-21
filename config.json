@@ -98,7 +98,7 @@
                 "op": "<>",
                 "value": ""
             }
-        },        
+        },
         {
             "key": "target-field",
             "type": "field-list",
@@ -110,6 +110,55 @@
                 "value": ""
             }
         },
+        {
+            "key": "enable-advanced-save",
+            "type": "checkbox",
+            "name": "Enable advanced save"
+        },
+        {
+            "key": "field-street",
+            "name": "<i>Street</i>",
+            "type": "field-list",
+            "required": true,
+            "branchingLogic": {
+                "field": "enable-advanced-save",
+                "op": "=",
+                "value": 1
+            }
+        },
+        {
+            "key": "field-number",
+            "name": "<i>Number</i>",
+            "type": "field-list",
+            "required": true,
+            "branchingLogic": {
+                "field": "enable-advanced-save",
+                "op": "=",
+                "value": 1
+            }
+        },
+        {
+            "key": "field-code",
+            "name": "<i>Post Code</i>",
+            "type": "field-list",
+            "required": true,
+            "branchingLogic": {
+                "field": "enable-advanced-save",
+                "op": "=",
+                "value": 1
+            }
+        },
+        {
+            "key": "field-city",
+            "name": "<i>City</i>",
+            "type": "field-list",
+            "required": true,
+            "branchingLogic": {
+                "field": "enable-advanced-save",
+                "op": "=",
+                "value": 1
+            }
+        },        
         {
             "key": "target-meta",
             "type": "field-list",
@@ -132,7 +181,7 @@
         {
             "key": "output-format",
             "type": "string",
-            "name": "Custom output format<br>Use <i>%PLACEHOLDER%</i> to refer to address parts.<br><i>Default: <code>%STREET% %NO%, %CODE% %PLACE%</code></i>",
+            "name": "Custom output format<br>Use <i>%PLACEHOLDER%</i> to refer to address parts.<br><i>Default: <code>%STREET% %NUMBER%, %CODE% %CITY%</code></i>",
             "branchingLogic": {
                 "conditions": [
                     {

@@ -4,7 +4,7 @@ namespace STPH\addressAutoComplete;
 
 class parts {
     public $street;
-    public $no;
+    public $number;
     public $code;
-    public $place;
+    public $city;
 }

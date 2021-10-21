@@ -21,6 +21,9 @@ class addressAutoComplete extends \ExternalModules\AbstractExternalModule {
     /** @var string */    
     private $target_field;
 
+    /** @var array */ 
+    private $target_advanced;    
+
     /** @var string */    
     private $target_meta;
 
@@ -38,6 +41,9 @@ class addressAutoComplete extends \ExternalModules\AbstractExternalModule {
     /** @var bool */
     private $isEnabledForSurvey;
 
+    /** @var bool */
+    private $isEnabledAdvancedSave;
+
    /**
     * Constructs the class
     *
@@ -50,6 +56,7 @@ class addressAutoComplete extends \ExternalModules\AbstractExternalModule {
        $this->api_logo = "";
        $this->api_config = (Object)[];
        $this->target_field = "";
+       $this->target_advanced = [];
        $this->target_meta = "";
        $this->lang = [];
        $this->outputFormat = "";
@@ -57,6 +64,8 @@ class addressAutoComplete extends \ExternalModules\AbstractExternalModule {
        $this->isSourceValid = false;
        $this->isEnabledForDataEntry = false;
        $this->isEnabledForSurvey = false;
+
+       $this->isEnabledAdvancedSave = false;
     }
 
    /**
@@ -66,8 +75,8 @@ class addressAutoComplete extends \ExternalModules\AbstractExternalModule {
     * @since 1.0.0
     *
     */
-    public function redcap_every_page_top($project_id = null) : void {    
-        
+    public function redcap_every_page_top($project_id = null) : void {
+                       
         $this->setSettings();
        
         if($this->isPage("DataEntry/index.php") && $this->isEnabledForDataEntry) {
@@ -205,6 +214,18 @@ class addressAutoComplete extends \ExternalModules\AbstractExternalModule {
 
         $this->isEnabledForDataEntry = $this->getProjectSetting("enable-for-data-entry");
         $this->isEnabledForSurvey = $this->getProjectSetting("enable-for-survey");
+        $this->isEnabledAdvancedSave = $this->getProjectSetting("enable-advanced-save");
+
+        if($this->isEnabledAdvancedSave) {
+
+            $this->target_advanced = array(
+                "street" => $this->getProjectSetting("field-street"),
+                "number" => $this->getProjectSetting("field-number"),
+                "code" => $this->getProjectSetting("field-code"),
+                "city" => $this->getProjectSetting("field-city")
+            );
+
+        }
 
         $this->outputFormat = $this->getProjectSetting("output-format");
 
@@ -383,12 +404,14 @@ class addressAutoComplete extends \ExternalModules\AbstractExternalModule {
             $(function() {
                 $(document).ready(function(){
                     STPH_addressAutoComplete.target_field = '<?= $this->target_field ?>';
+                    STPH_addressAutoComplete.target_advanced = <?= json_encode($this->target_advanced) ?>;
                     STPH_addressAutoComplete.target_meta = '<?= $this->target_meta ?>';
                     STPH_addressAutoComplete.outputFormat = '<?= $this->outputFormat ?>';
                     STPH_addressAutoComplete.base_url = '<?= $this->getBaseUrl() ?>';
                     STPH_addressAutoComplete.base64_logo = '<?= $this->getApiLogoAsBase64() ?>'
                     STPH_addressAutoComplete.source_identifier = '<?= $this->api_config->identifier ?>';
                     STPH_addressAutoComplete.requestHandlerUrl = '<?= $this->getUrl("requestHandler.php") ?>';
+                    STPH_addressAutoComplete.advancedSave = '<?= json_encode($this->isEnabledAdvancedSave) ?>';
                     STPH_addressAutoComplete.lang = <?php print json_encode($this->lang) ?>;
                     STPH_addressAutoComplete.debug = '<?= $this->debug ?>';
                     STPH_addressAutoComplete.init();

@@ -42,13 +42,13 @@ abstract class Source {
         if(!empty($this->format)) {
             $label =$this->format;
             $label = str_ireplace("%street%", $address->parts->street, $label);
-            $label = str_ireplace("%no%", $address->parts->no, $label);
+            $label = str_ireplace("%number%", $address->parts->number, $label);
             $label = str_ireplace("%code%", $address->parts->code, $label);
-            $label = str_ireplace("%place%", $address->parts->place, $label);
+            $label = str_ireplace("%city%", $address->parts->city, $label);
         }
 
         else {
-            $label = $address->parts->street . " " . $address->parts->no . ", " . $address->parts->code . " " . $address->parts->place;
+            $label = $address->parts->street . " " . $address->parts->number . ", " . $address->parts->code . " " . $address->parts->city;
         }
 
         return $label;
