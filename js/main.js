@@ -183,8 +183,6 @@ STPH_addressAutoComplete.init = function() {
       
       target_field.val(ui.item.label);
 
-      console.log(ui.item);
-
       //  If advanced save is enabled save parts as well
       if(STPH_addressAutoComplete.advancedSave) {
         save_street.val(ui.item.parts.street);
@@ -256,6 +254,14 @@ STPH_addressAutoComplete.setState = function(state, ui=null) {
 
 STPH_addressAutoComplete.resetFields = function() {
   var target_field = $('#'+STPH_addressAutoComplete.target_field+'-tr').find('input');
+  //  Set advanced targets if enabled
+  if(STPH_addressAutoComplete.advancedSave) {
+    var save_street = $('#'+STPH_addressAutoComplete.target_advanced.street+'-tr').find('input');
+    var save_number = $('#'+STPH_addressAutoComplete.target_advanced.number+'-tr').find('input');
+    var save_code = $('#'+STPH_addressAutoComplete.target_advanced.code+'-tr').find('input');
+    var save_city = $('#'+STPH_addressAutoComplete.target_advanced.city+'-tr').find('input');
+  }
+
   var target_meta = $('#'+STPH_addressAutoComplete.target_meta+'-tr').find('input');
   var target_aac = $('#'+STPH_addressAutoComplete.target_field+'-tr').find('input#address-auto-complete-'+STPH_addressAutoComplete.target_field);
   
@@ -264,6 +270,12 @@ STPH_addressAutoComplete.resetFields = function() {
   target_aac.autocomplete("enable");
 
   target_field.val("");
+  if(STPH_addressAutoComplete.advancedSave) {
+    save_street.val("");
+    save_number.val("");
+    save_code.val("");
+    save_city.val("");
+  }
   target_meta.val("");
 
   STPH_addressAutoComplete.setState( "default");
