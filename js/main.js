@@ -78,7 +78,7 @@ STPH_addressAutoComplete.init = function() {
         var country = $('#custom-country').val();
         var note = $('#custom-note').val();
         
-        var customAddress = street + " " + number + ", " + city + " " + code + "-" + country + "" + note;
+        var customAddress = street + " " + number + ", " + city + " " + code + "-" + country + " " + note;
                 
         var ui = {};
         ui.item = customAddress;
@@ -295,7 +295,7 @@ STPH_addressAutoComplete.setState = function(state, ui=null) {
     aac_input.val(ui.item);
     aac_selection.html('<i>' +  ui.item + '</i>');
     aac_input.removeClass("is-not-listed is-listed").addClass("is-valid");
-    aac_status.html(STPH_addressAutoComplete.lang.aac_status_is_custom + '<a style="" onclick="STPH_addressAutoComplete.addCustomAddress()" class="no-focus-out" id="aac-custom-address-btn" href="#add-custom-address">Custom Address</a>' + '<a onclick="STPH_addressAutoComplete.resetFields()" class="aac-reset-btn" href="#reset-selected-address">'+STPH_addressAutoComplete.lang.aac_reset_address+'</a>');
+    aac_status.html(STPH_addressAutoComplete.lang.aac_status_is_custom + '<a onclick="STPH_addressAutoComplete.addCustomAddress()" class="no-focus-out" id="aac-custom-address-btn" href="#add-custom-address">' + STPH_addressAutoComplete.lang.cam_title +'</a>' + '<a style="margin-right:5px!important;" onclick="STPH_addressAutoComplete.resetFields()" class="aac-reset-btn" href="#reset-selected-address">'+STPH_addressAutoComplete.lang.aac_reset_address+'</a>');
 
   }
 
