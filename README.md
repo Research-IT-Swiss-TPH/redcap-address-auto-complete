@@ -15,9 +15,11 @@ Install the module from REDCap module repository and enable over Control Center.
 - API Response Limit: Defines how may results are returned per search request. This can significantly affect performance. Default and maximum are set to 20.
 - API Key: An API key can be used to have higher priviliges, such as performing more requests per time. In general API keys are obtained by application.
 - Enable for Data Entry or Enable for Survey: Define where the module will be rendered.
-- Target Field: Select target field to be transformed into Address Auto-Complete
+- Target Field: Select target field to be transformed into Address Auto-Complete.
+- Enable advanced save: Define additional target fields for Street, Number, Post Code and City.
 - Target Meta: Select meta field where geo information should be saved. Format is <code>address-id, x, y</code>.
-- Custom output format: Use <i>%PLACEHOLDER%</i> to refer to address parts. <i>Default: <code>%STREET% %NO%, %CODE% %PLACE%</code></i>
+- Custom output format: Use <i>%PLACEHOLDER%</i> to refer to address parts. <i>Default: <code>%STREET% %NO%, %CODE% %PLACE%</code></i>.
+- Enable Custom Address: Adds the possibility to input custom addresses manually in case a search does not return any result.
 - Enable Javascript Debug: Shows Log Messages in Javascript Console.
 
 ## Add your API source
@@ -48,7 +50,6 @@ geo.admin.ch  | Switzerland
 ## Roadmap
 
 - Improve Source Validation before Module render.
-- Add manual address insertion feature.
 
 ## Changelog
 
