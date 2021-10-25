@@ -43,6 +43,8 @@ STPH_addressAutoComplete.init = function() {
     var save_number = $('#'+STPH_addressAutoComplete.target_advanced.number+'-tr').find('input');
     var save_code = $('#'+STPH_addressAutoComplete.target_advanced.code+'-tr').find('input');
     var save_city = $('#'+STPH_addressAutoComplete.target_advanced.city+'-tr').find('input');
+    var save_country = $('#'+STPH_addressAutoComplete.target_advanced.country+'-tr').find('input');
+    var save_note = $('#'+STPH_addressAutoComplete.target_advanced.note+'-tr').find('input');
   }
 
   var target_meta = $('#' + STPH_addressAutoComplete.target_meta + '-tr').find('input');
@@ -79,6 +81,14 @@ STPH_addressAutoComplete.init = function() {
         var note = $('#custom-note').val();
         
         var customAddress = street + " " + number + ", " + city + " " + code + "-" + country + " " + note;
+
+        // Save into fields
+        save_street.val(street);
+        save_number.val(number);
+        save_code.val(code);
+        save_city.val(city);
+        save_country.val(country);
+        save_note.val(note);
                 
         var ui = {};
         ui.item = customAddress;

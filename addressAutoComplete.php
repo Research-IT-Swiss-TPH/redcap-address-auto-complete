@@ -227,7 +227,9 @@ class addressAutoComplete extends \ExternalModules\AbstractExternalModule {
                 "street" => $this->getProjectSetting("field-street"),
                 "number" => $this->getProjectSetting("field-number"),
                 "code" => $this->getProjectSetting("field-code"),
-                "city" => $this->getProjectSetting("field-city")
+                "city" => $this->getProjectSetting("field-city"),
+                "country" => $this->getProjectSetting("field-country"),
+                "note" => $this->getProjectSetting("field-note")
             );
 
         }

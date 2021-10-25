@@ -158,6 +158,28 @@
                 "op": "=",
                 "value": 1
             }
+        },
+        {
+            "key": "field-country",
+            "name": "<i>Country</i>",
+            "type": "field-list",
+            "required": false,
+            "branchingLogic": {
+                "field": "enable-advanced-save",
+                "op": "=",
+                "value": 1
+            }
+        },
+        {
+            "key": "field-note",
+            "name": "<i>Note(s)</i>",
+            "type": "field-list",
+            "required": false,
+            "branchingLogic": {
+                "field": "enable-advanced-save",
+                "op": "=",
+                "value": 1
+            }
         },        
         {
             "key": "target-meta",
