@@ -337,6 +337,7 @@ class addressAutoComplete extends \ExternalModules\AbstractExternalModule {
             "aac_status_default" => $this->tt("aac_status_default"),
             "aac_status_is_loading" => $this->tt("aac_status_is_loading"),
             "aac_status_is_not_listed" => $this->tt("aac_status_is_not_listed"),
+            "aac_status_is_not_listed_ca" => $this->tt("aac_status_is_not_listed_ca"),
             "aac_status_is_listed" => $this->tt("aac_status_is_listed"),
             "aac_status_is_valid" => $this->tt("aac_status_is_valid"),
             "aac_status_is_custom" => $this->tt("aac_status_is_custom"),

@@ -277,7 +277,14 @@ STPH_addressAutoComplete.setState = function(state, ui=null) {
 
     if(ui.content == null) {
       aac_input.addClass("is-not-listed");
-      aac_status.html(STPH_addressAutoComplete.lang.aac_status_is_not_listed + '<a style="" onclick="STPH_addressAutoComplete.addCustomAddress()" class="no-focus-out" id="aac-custom-address-btn" href="#add-custom-address">Custom Address</a>');
+      var content;
+      if(STPH_addressAutoComplete.customAddress) {
+        content  = STPH_addressAutoComplete.lang.aac_status_is_not_listed_ca + '<a style="" onclick="STPH_addressAutoComplete.addCustomAddress()" class="no-focus-out" id="aac-custom-address-btn" href="#add-custom-address">Custom Address</a>';
+      } else {
+        content = STPH_addressAutoComplete.lang.aac_status_is_not_listed;
+      }
+
+      aac_status.html(content);
       STPH_addressAutoComplete.log("Nothing found.")
     } else if(ui.content.length > 0) {
       aac_input.addClass("is-listed");
