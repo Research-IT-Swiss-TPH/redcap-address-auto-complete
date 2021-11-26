@@ -82,13 +82,16 @@ STPH_addressAutoComplete.init = function() {
         
         var customAddress = street + " " + number + ", " + city + " " + code + "-" + country + " " + note;
 
-        // Save into fields
-        save_street.val(street);
-        save_number.val(number);
-        save_code.val(code);
-        save_city.val(city);
-        save_country.val(country);
-        save_note.val(note);
+        // Save into fields if enabled
+        if(STPH_addressAutoComplete.advancedSave)
+        {
+          save_street.val(street);
+          save_number.val(number);
+          save_code.val(code);
+          save_city.val(city);
+          save_country.val(country);
+          save_note.val(note);
+        }
                 
         var ui = {};
         ui.item = customAddress;
