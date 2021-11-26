@@ -241,7 +241,7 @@ STPH_addressAutoComplete.init = function() {
         save_city.val(ui.item.parts.city);
       }
 
-      target_meta.val(ui.item.meta.id + ", " + ui.item.meta.x + ", " + ui.item.meta.y)
+      target_meta.val(ui.item.meta.id + ", " + ui.item.meta.y + ", " + ui.item.meta.x)
       STPH_addressAutoComplete.log("A valid address has been selected. Meta and Field has been set.")
     }
 
