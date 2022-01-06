@@ -51,7 +51,7 @@ Identifier     | Country              | Limitation*    | Authentication |
 geo.admin.ch   | Switzerland          | 20 / Minute    | no             |
 getaddress.io  | United Kingdom       | 20 / Day       | yes            |
 
-* For free use.
+\* For free use.
 
 ## Roadmap
 
