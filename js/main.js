@@ -37,15 +37,6 @@ STPH_addressAutoComplete.init = function() {
   //  Set target field
   var target_field = $('#'+STPH_addressAutoComplete.target_field+'-tr').find('input');
   target_field.hide();
-  //  Set advanced targets if enabled
-  if(STPH_addressAutoComplete.advancedSave) {
-    var save_street = $('#'+STPH_addressAutoComplete.target_advanced.street+'-tr').find('input');
-    var save_number = $('#'+STPH_addressAutoComplete.target_advanced.number+'-tr').find('input');
-    var save_code = $('#'+STPH_addressAutoComplete.target_advanced.code+'-tr').find('input');
-    var save_city = $('#'+STPH_addressAutoComplete.target_advanced.city+'-tr').find('input');
-    var save_country = $('#'+STPH_addressAutoComplete.target_advanced.country+'-tr').find('input');
-    var save_note = $('#'+STPH_addressAutoComplete.target_advanced.note+'-tr').find('input');
-  }
 
   var target_meta = $('#' + STPH_addressAutoComplete.target_meta + '-tr').find('input');
 
@@ -85,12 +76,8 @@ STPH_addressAutoComplete.init = function() {
         // Save into fields if enabled
         if(STPH_addressAutoComplete.advancedSave)
         {
-          save_street.val(street);
-          save_number.val(number);
-          save_code.val(code);
-          save_city.val(city);
-          save_country.val(country);
-          save_note.val(note);
+          var as_data = { street: street, number:  number, code: code, city: city, country: country, note: note};
+          STPH_addressAutoComplete.handleAdvancedSave(as_data);
         }
                 
         var ui = {};
@@ -160,29 +147,33 @@ STPH_addressAutoComplete.init = function() {
     //  Set Source from external REST API
     source: function(request, response) {
 
-      var full_url = STPH_addressAutoComplete.base_url + request.term;
-      
-      $.getJSON( full_url, {}, function(data){
+      var full_url = STPH_addressAutoComplete.endpoint_url + request.term + STPH_addressAutoComplete.url_params + "&ref=redcap-address-auto-complete";
 
-        STPH_addressAutoComplete.log("Results have been fetched.")
+      $.ajax({
+        dataType: "json",
+        url: full_url,
+        success: function(data){          
 
-        //  Backend AJAX Url
-        var backend = STPH_addressAutoComplete.requestHandlerUrl + "&action=mapResults";
-      
-        $.post(backend, {
-          source: STPH_addressAutoComplete.source_identifier,
-          results: JSON.stringify(data.results),
-        })
-        .done(function(mappedData){
-          STPH_addressAutoComplete.log("Data has been mapped.")
-          response(mappedData);
-        })
-        .fail(function(err){
-          STPH_addressAutoComplete.log("Data could not be mapped.")
-          console.log(err.responseText);
-        });
-
+          STPH_addressAutoComplete.log("Results have been fetched.")
+          
+          //  Mapping Request to REDCap backend
+          var backend = STPH_addressAutoComplete.requestHandlerUrl + "&action=mapResults";        
+          $.post(backend, {
+            source: STPH_addressAutoComplete.source_identifier,
+            results: JSON.stringify(Object.values(data)[0])
+          })
+          .done(function(mappedData){
+            STPH_addressAutoComplete.log("Data has been mapped.")
+            response(mappedData)
+          })
+          .fail(function(err){
+            STPH_addressAutoComplete.log("Data could not be mapped.")
+            console.log(err.responseText)
+          });            
+  
+        }
       });
+      
     },    
 
     open: function() {
@@ -234,20 +225,44 @@ STPH_addressAutoComplete.init = function() {
         ui
       );
       
+      //  Set target field to label value
       target_field.val(ui.item.label);
 
-      //  If advanced save is enabled save parts as well
-      if(STPH_addressAutoComplete.advancedSave) {
-        save_street.val(ui.item.parts.street);
-        save_number.val(ui.item.parts.number);
-        save_code.val(ui.item.parts.code);
-        save_city.val(ui.item.parts.city);
+      //  Check if secondary action is needed and process advanced save & meta fields over additional api call
+      if(STPH_addressAutoComplete.hasSecondaryAction === true) {
+
+        STPH_addressAutoComplete.log("Secondary Action needed. Performing Request with id " + ui.item.meta.id)
+
+        STPH_addressAutoComplete.performSecondaryAction(ui.item.meta.id)
+        .then( (ui_s) => {
+          
+          //  Save meta data
+          target_meta.val(ui.item.meta.id + ", " + ui_s.y + ", " + ui_s.x)
+
+          //  If advanced save is enabled save parts as well
+          if(STPH_addressAutoComplete.advancedSave) {
+            var as_data = { street: ui_s.street, number:  ui_s.number, code: ui_s.code, city: ui_s.city, country: "", note: ""};
+            STPH_addressAutoComplete.handleAdvancedSave(as_data);
+          }
+
+          STPH_addressAutoComplete.log("A valid address has been selected. Meta and Field has been set.")
+
+        });
+      } else {
+        
+        //  Save meta data
+        target_meta.val(ui.item.meta.id + ", " + ui.item.meta.y + ", " + ui.item.meta.x)        
+
+        //  If advanced save is enabled save parts as well
+        if(STPH_addressAutoComplete.advancedSave) {
+          var as_data = { street: ui.item.parts.street, number:  ui.item.parts.number, code: ui.item.parts.code, city: ui.item.parts.city, country: "", note: ""};
+          STPH_addressAutoComplete.handleAdvancedSave(as_data);
+        }
+        
+        STPH_addressAutoComplete.log("A valid address has been selected. Meta and Field has been set.")
+
       }
-
-      target_meta.val(ui.item.meta.id + ", " + ui.item.meta.y + ", " + ui.item.meta.x)
-      STPH_addressAutoComplete.log("A valid address has been selected. Meta and Field has been set.")
     }
-
   });
 
 }
@@ -323,14 +338,6 @@ STPH_addressAutoComplete.setState = function(state, ui=null) {
 
 STPH_addressAutoComplete.resetFields = function() {
   var target_field = $('#'+STPH_addressAutoComplete.target_field+'-tr').find('input');
-  //  Set advanced targets if enabled
-  if(STPH_addressAutoComplete.advancedSave) {
-    var save_street = $('#'+STPH_addressAutoComplete.target_advanced.street+'-tr').find('input');
-    var save_number = $('#'+STPH_addressAutoComplete.target_advanced.number+'-tr').find('input');
-    var save_code = $('#'+STPH_addressAutoComplete.target_advanced.code+'-tr').find('input');
-    var save_city = $('#'+STPH_addressAutoComplete.target_advanced.city+'-tr').find('input');
-  }
-
   var target_meta = $('#'+STPH_addressAutoComplete.target_meta+'-tr').find('input');
   var target_aac = $('#'+STPH_addressAutoComplete.target_field+'-tr').find('input#address-auto-complete-'+STPH_addressAutoComplete.target_field);
   
@@ -339,39 +346,39 @@ STPH_addressAutoComplete.resetFields = function() {
   target_aac.autocomplete("enable");
 
   target_field.val("");
-  if(STPH_addressAutoComplete.advancedSave) {
-    save_street.val("");
-    save_number.val("");
-    save_code.val("");
-    save_city.val("");
-  }
   target_meta.val("");
+
+  if(STPH_addressAutoComplete.advancedSave) {
+    var as_data = { street: "", number:  "", code: "", city: "", country: "", note: ""};
+    STPH_addressAutoComplete.handleAdvancedSave(as_data);
+  }
 
   STPH_addressAutoComplete.setState( "default");
   target_aac.focus();
 
   STPH_addressAutoComplete.log("Fields have been reset.");
-
 }
 
 STPH_addressAutoComplete.addCustomAddress = function() {
   $('#custom-address-modal').modal('show');
-  console.log("Trigger Modal to add custom address here..");
+  STPH_addressAutoComplete.log("Trigger Modal to add custom address here..");
 }
 
-STPH_addressAutoComplete.setBaseUrl = function() {
+STPH_addressAutoComplete.handleAdvancedSave = function(data) {
 
-  var api_config = STPH_addressAutoComplete.api_config;
-  var api_limit = STPH_addressAutoComplete.api_limit || 20;
-  var api_token = STPH_addressAutoComplete.api_token  
+  //  Define targets
+  var save_street = $('#'+STPH_addressAutoComplete.target_advanced.street+'-tr').find('input');
+  var save_number = $('#'+STPH_addressAutoComplete.target_advanced.number+'-tr').find('input');
+  var save_code = $('#'+STPH_addressAutoComplete.target_advanced.code+'-tr').find('input');
+  var save_city = $('#'+STPH_addressAutoComplete.target_advanced.city+'-tr').find('input');
+  var save_country = $('#'+STPH_addressAutoComplete.target_advanced.country+'-tr').find('input');
+  var save_note = $('#'+STPH_addressAutoComplete.target_advanced.note+'-tr').find('input');
 
-  if(api_token) {
-    var str_token = '&' + api_config.token + '=' + api_token;
-  } else {
-    var str_token = '';
-  }
-  
-  var base_url = api_config.url + api_config.endpoint + '&' + api_config.limit + '=' + api_limit  + str_token + '&' + api_config.term + '=';
-  return base_url;
+  save_street.val(data.street);
+  save_number.val(data.number);
+  save_code.val(data.code);
+  save_city.val(data.city);
+  save_country.val(data.country);
+  save_note.val(data.note);
 
 }
