@@ -33,8 +33,6 @@ class addressAutoComplete extends \ExternalModules\AbstractExternalModule {
     /** @var array */ 
     private $lang;
 
-    private $outputFormat;
-
     /** @var bool */    
     private $isSourceValid;
 
@@ -65,7 +63,6 @@ class addressAutoComplete extends \ExternalModules\AbstractExternalModule {
        $this->target_advanced = [];
        $this->target_meta = "";
        $this->lang = [];
-       $this->outputFormat = "";
 
        $this->isSourceValid = false;
        $this->isEnabledForDataEntry = false;
@@ -243,9 +240,6 @@ class addressAutoComplete extends \ExternalModules\AbstractExternalModule {
 
         }
 
-
-        $this->outputFormat = $this->getProjectSetting("output-format");
-
         $this->debug = $this->getProjectSetting("javascript-debug") == true;
     }
 
@@ -359,7 +353,7 @@ class addressAutoComplete extends \ExternalModules\AbstractExternalModule {
     }
 
    /**
-     * Set Language Strings
+     * Sets Language Strings
      *
      * @since 1.0.0
      *
@@ -410,7 +404,7 @@ class addressAutoComplete extends \ExternalModules\AbstractExternalModule {
     }
 
    /**
-     * Get Mapped Results by Source
+     * Gets Mapped Results by Source
      *
      * @param string $identifier
      * @param object $data
@@ -440,7 +434,7 @@ class addressAutoComplete extends \ExternalModules\AbstractExternalModule {
     }
  
    /**
-     * Include JavaScript files
+     * Includes JavaScript files
      *
      * @since 1.0.0
      *
@@ -488,7 +482,7 @@ class addressAutoComplete extends \ExternalModules\AbstractExternalModule {
 
     
    /**
-     * Include Style files
+     * Includes Style files
      *
      * @since 1.0.0    
      *

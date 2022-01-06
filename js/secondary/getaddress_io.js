@@ -6,8 +6,7 @@ STPH_addressAutoComplete.performSecondaryAction = function(id) {
         
         $.ajax({
             url: secondary_url,
-            success: function(data){
-                console.log(data)
+            success: function(data){                
                 //  Adjust format here.
                 var response = {
                     street: data.thoroughfare, 

@@ -12,7 +12,7 @@
         },
         {           
             "identifier": "getaddress.io",
-            "description": "<i>getaddress.io</i> Simple APIs for UK addresses. <br><b style='color:red'>API key is needed:</b> Please check API documentation for details and use API Registration to obain a key.",
+            "description": "<i>getaddress.io</i> is a limited free-to-use, commercial API service for UK addresses. <br><b style='color:red'>API key is needed:</b> Please check API documentation for details and use API Registration to obtain a key.",
             "documentation": "https://documentation.getaddress.io/",
             "registration": "https://getaddress.io/Plan/Free",
             "url": "api.getAddress.io",
