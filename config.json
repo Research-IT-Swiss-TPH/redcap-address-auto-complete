@@ -42,6 +42,10 @@
                     "value": "geo.admin.ch"
                 },
                 {
+                    "name": "getaddress.io",
+                    "value": "getaddress.io"
+                },                
+                {
                     "name": "your.api.here",
                     "value": "your.api.here"
                 }
@@ -72,7 +76,7 @@
         {
             "key": "api-key",
             "type": "text",
-            "name": "API Key<br><small>An API key can be used to have higher priviliges, such as performing more requests per time. In general API keys are obtained by application.</small>",
+            "name": "API Key<br><small>For some API sources an API key may be mandatory hence the module will not work without a proper key. Read more about key necessity on the API source documentation</small>",
             "branchingLogic": {
                 "field": "api-source",
                 "op": "<>",
