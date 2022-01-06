@@ -3,7 +3,7 @@
 
     "namespace": "STPH\\addressAutoComplete", 
 
-    "description": "<b>Please note that currently supported countries are: Switzerland.</b><br>Easily create Auto-Complete Address fields that fetch results from APIs. Additionally, save geo data in custom variables and adjust the format of the address label.",
+    "description": "<b>Please note that currently supported countries are: Switzerland, United Kingdom.</b><br>Easily create Auto-Complete Address fields that fetch results from APIs. Additionally, save geo data in custom variables and adjust the format of the address label.",
 
     "documentation": "README.md",
 
@@ -207,7 +207,7 @@
         {
             "key": "output-format",
             "type": "string",
-            "name": "Custom output format<br>Use <i>%PLACEHOLDER%</i> to refer to address parts.<br><i>Default: <code>%STREET% %NUMBER%, %CODE% %CITY%</code></i>",
+            "name": "Custom output format<br>Use <i>%PLACEHOLDER%</i> to refer to address parts.<br><i>Default: <code>%STREET% %NUMBER%, %CODE% %CITY%</code></i><br><b style='color:red;'>Currently, not supported with secondary actions.</b>",
             "branchingLogic": {
                 "conditions": [
                     {

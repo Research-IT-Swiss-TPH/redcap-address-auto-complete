@@ -1,5 +1,5 @@
 # Address Auto Complete
-**Please note that currently supported countries are: Switzerland.**
+**Please note that currently supported countries are: Switzerland, United Kingdom.**
 
 Redcap Module that helps you to easily create Auto-Complete Address fields that fetch results from APIs. Additionally, save geo data in custom variables and adjust the format of the address label.
 
@@ -26,8 +26,8 @@ Install the module from REDCap module repository and enable over Control Center.
 
 *Requirements for APIs*
 
-- Trustable: Open Source or Official APIs by Governments
-- Free: Non-Commercial
+- Trustable
+- Free/Affordable
 - Compatible: The search endpoint should be accessbile through a GET-request and should return a JSON response.
 
 If you want to add your own API, please make a Pull Request that includes the following edits:
@@ -37,18 +37,25 @@ If you want to add your own API, please make a Pull Request that includes the fo
 - `/config.json`: Add your api source as a name-value-pair under choices for the project setting `api-source`.
 - `/sources/img/your.api.svg`: Optionally, add a logo of the API in svg format. 
 
+In case the API is build in a way that secondary actions/requests are needed, you can additionaly include:
+- `/js/secondary/your_api_source.js`: Add a function `STPH_addressAutoComplete.performSecondaryAction` that returns the address object as promise. The response object **must** contain  street, number, code, city, x (longtitude), y (latitude)
+- Also do not forget to add `"secondary": true` to your `/sources/sources.json` for the relevant source, if you want the secondary action to be triggered.
+
 
 If you cannot make the development yourself, but have found a useful API, please [open a Github Issue](https://github.com/tertek/redcap-address-auto-complete/issues) describing the details about the API source to be added.
 
 ## Available APIs
 
-Identifier    | Country
-------------- | --------------------
-geo.admin.ch  | Switzerland
+Identifier     | Country              | Limitation*    | Authentication |
+-------------- | -------------------- | -------------- | -------------- |
+geo.admin.ch   | Switzerland          | 20 / Minute    | no             |
+getaddress.io  | United Kingdom       | 20 / Day       | yes            |
 
+* For free use.
 
 ## Roadmap
 
+- Update docs for version 1.2.0
 - Improve Source Validation before Module render.
 
 ## Changelog
@@ -57,3 +64,4 @@ Version | Description
 ------- | --------------------
 v1.0.0  | Initial release.
 v1.1.0  | New Features: Custom Addresses input, Advanced Save for address data in target fields
+v1.2.0  | New API Source: United Kingdom - getaddress.io
