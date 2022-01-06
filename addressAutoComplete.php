@@ -17,7 +17,10 @@ class addressAutoComplete extends \ExternalModules\AbstractExternalModule {
 
     /** @var object */ 
     private $api_config;
-
+  
+    /** @var string */    
+    private $api_key;
+    
     /** @var string */    
     private $target_field;
 
@@ -166,7 +169,11 @@ class addressAutoComplete extends \ExternalModules\AbstractExternalModule {
             $html_documentation = "<a target='_blank' href='".$config->documentation."'><i class='fas fa-book'></i> API Documentation</a>";
         }
 
-        return $html_logo . $html_identifier . $html_description . $html_documentation;
+        if(!empty($config->registration)) {
+            $html_registration = "<a style='margin-left:10px' target='_blank' href='".$config->registration."'><i class='fas fa-key'></i> API Registration</a>";
+        }
+
+        return $html_logo . $html_identifier . $html_description . $html_documentation . $html_registration;
 
     }
 
@@ -212,6 +219,8 @@ class addressAutoComplete extends \ExternalModules\AbstractExternalModule {
         $this->api_limit = $this->getProjectSetting("api-limit");
 
         $this->api_config = $this->getSourceConfig();
+
+        $this->api_key = $this->getProjectSetting("api-key");
         
         $this->target_field = $this->getProjectSetting("target-field");
         $this->target_meta = $this->getProjectSetting("target-meta");
@@ -269,25 +278,50 @@ class addressAutoComplete extends \ExternalModules\AbstractExternalModule {
     */         
     private function getBaseUrl(): string {
 
-        $isSecure = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') || $_SERVER['SERVER_PORT'] == 443;
-        $protocol = $isSecure ? 'https://' : 'http://';
+        //$isSecure = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') || $_SERVER['SERVER_PORT'] == 443;
+        //$protocol = $isSecure ? 'https://' : 'http://';
+        $protocol = "https://";
+
+        return $protocol . $this->api_config->url;
+    }
+
+   /**
+    * Gets Endpoint Url 
+    *
+    *
+    * @since 1.2.0
+    *
+    */   
+    private function getEndpointUrl(): string {
+        $base = $this->getBaseUrl();
+
+        if($this->api_config->term == "") {
+            $api_term_string = "/";
+        } else {
+            $api_term_string = '&' . $this->api_config->term . '=';
+        }
+
+        return $base . $this->api_config->endpoint . $api_term_string;
+    }    
+
+    private function getUrlParams(): string {
 
         $config = $this->api_config;
         $api_limit_string = '&'.$config->limit.'=20';
         $api_token_string = '';
-        $api_term_string = '&' . $config->term . '=';
 
         if(!empty($this->api_limit) && is_numeric($this->api_limit) && $this->api_limit < 20 && $this->api_limit > 0) {
-            $api_limit_string = '&'.$config->limit.'='.$this->api_limit;
+            $api_limit_string = "&" . $config->limit.'='.$this->api_limit;
         }
 
-        if($this->api_token) {
-            $api_token_string = '&' . $config->token . '=' . $this->api_token;
+        if($this->api_key) {
+            $api_token_string = ($this->api_config->term == "" ? "?" : "&") . $config->token . '=' . $this->api_key;
         } 
 
-        return $protocol . $config->url . $config->endpoint . $api_limit_string . $api_token_string . $api_term_string;
 
+        return $api_token_string . $api_limit_string;
     }
+
 
    /**
     * Generates config description
@@ -375,8 +409,6 @@ class addressAutoComplete extends \ExternalModules\AbstractExternalModule {
         echo json_encode($response);
     }
 
-
-
    /**
      * Get Mapped Results by Source
      *
@@ -406,9 +438,7 @@ class addressAutoComplete extends \ExternalModules\AbstractExternalModule {
         return ( new $class_with_namespace(...$arrayOfConstructorParameters) )->getMappedResults();        
 
     }
-
-
-  
+ 
    /**
      * Include JavaScript files
      *
@@ -422,17 +452,22 @@ class addressAutoComplete extends \ExternalModules\AbstractExternalModule {
         <script> 
             $(function() {
                 $(document).ready(function(){
+                    STPH_addressAutoComplete.base_url = '<?= $this->getBaseUrl() ?>';
+                    STPH_addressAutoComplete.endpoint_url = '<?= $this->getEndpointUrl() ?>';
+                    STPH_addressAutoComplete.url_params = '<?= $this->getUrlParams() ?>';
+                    STPH_addressAutoComplete.source_identifier = '<?= $this->api_config->identifier ?>';
+                    STPH_addressAutoComplete.hasSecondaryAction = <?= json_encode($this->api_config->secondary) ?>;
+
                     STPH_addressAutoComplete.target_field = '<?= $this->target_field ?>';
                     STPH_addressAutoComplete.target_advanced = <?= json_encode($this->target_advanced) ?>;
                     STPH_addressAutoComplete.target_meta = '<?= $this->target_meta ?>';
-                    STPH_addressAutoComplete.outputFormat = '<?= $this->outputFormat ?>';
-                    STPH_addressAutoComplete.base_url = '<?= $this->getBaseUrl() ?>';
+
                     STPH_addressAutoComplete.base64_logo = '<?= $this->getApiLogoAsBase64() ?>'
-                    STPH_addressAutoComplete.source_identifier = '<?= $this->api_config->identifier ?>';
                     STPH_addressAutoComplete.requestHandlerUrl = '<?= $this->getUrl("requestHandler.php") ?>';
                     STPH_addressAutoComplete.advancedSave = <?= json_encode($this->isEnabledAdvancedSave) ?>;
                     STPH_addressAutoComplete.customAddress = <?= json_encode($this->isEnabledCustomAddress) ?>;
                     STPH_addressAutoComplete.customAddressModalUrl = '<?= $this->getUrl("customAddressModal.html") ?>';
+
                     STPH_addressAutoComplete.lang = <?= json_encode($this->lang) ?>;
                     STPH_addressAutoComplete.debug = <?= json_encode($this->debug) ?>;
                     STPH_addressAutoComplete.init();
@@ -440,6 +475,14 @@ class addressAutoComplete extends \ExternalModules\AbstractExternalModule {
             });
         </script>
         <?php
+
+        if($this->api_config->secondary) {            
+             //  Replace dots with underscores
+            $func_name = str_replace(".", "_", $this->api_config->identifier);
+            ?>
+            <script src="<?php print $this->getUrl('js/secondary/'.$func_name.'.js'); ?>"></script>
+            <?php
+        }
     }
     
 

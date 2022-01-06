@@ -27,9 +27,11 @@ abstract class Source {
                 throw new \Exception("Cannot map results! Method 'mapAddress' must return instance of class 'Address'!");
             }
 
-            //  Format output label
-            $mappedAddress->label = $this->formatLabel($mappedAddress);
-            $mappedAddress->value = $mappedAddress->label;
+            //  Format output label and value if not yet set (in case there is no secondary action for this source)
+            if($mappedAddress->label == "") {
+                $mappedAddress->label = $this->formatLabel($mappedAddress);
+                $mappedAddress->value = $mappedAddress->label;
+            }
             
             $this->mappedResults[$key] = $mappedAddress;
 

@@ -10,6 +10,18 @@
             "term": "searchText",
             "token": "token"
         },
+        {           
+            "identifier": "getaddress.io",
+            "description": "<i>getaddress.io</i> Simple APIs for UK addresses. <br><b style='color:red'>API key is needed:</b> Please check API documentation for details and use API Registration to obain a key.",
+            "documentation": "https://documentation.getaddress.io/",
+            "registration": "https://getaddress.io/Plan/Free",
+            "url": "api.getAddress.io",
+            "endpoint": "/autocomplete",
+            "secondary": true,
+            "limit": "top",
+            "term": "",
+            "token": "api-key"
+        },        
         {
             "identifier": "your.api.here",
             "description": "If you would like to add your own API please make a Pull Request via Github. More information can be found in the docs."
