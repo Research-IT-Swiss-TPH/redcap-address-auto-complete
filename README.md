@@ -65,3 +65,4 @@ Version | Description
 v1.0.0  | Initial release.
 v1.1.0  | New Features: Custom Addresses input, Advanced Save for address data in target fields
 v1.2.0  | New API Source: United Kingdom - getaddress.io
+v2.0.0  | Added support for multiple targets: it is possible to declare multiple instructions that can even run on the same page.

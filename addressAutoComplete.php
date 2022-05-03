@@ -306,6 +306,7 @@ class addressAutoComplete extends \ExternalModules\AbstractExternalModule {
                 return;
             }
            
+            //  Create the actual array used to run instructions
             foreach ($instructions_raw as $key => $instruction_raw) {
                 $this->instructions[$key] = array(
                     "target_field"      => $instruction_raw["target-field"],
@@ -320,8 +321,6 @@ class addressAutoComplete extends \ExternalModules\AbstractExternalModule {
                     )
                 );
             }
-
-            //  loop through all of them and populate instructions with map
         }
 
     }
