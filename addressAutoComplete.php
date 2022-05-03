@@ -49,7 +49,7 @@ class addressAutoComplete extends \ExternalModules\AbstractExternalModule {
     private $helpers;
 
     /** @var array */ 
-    private $instructions;   
+    private $instructions;
 
    /**
     * Constructs the class
@@ -85,7 +85,7 @@ class addressAutoComplete extends \ExternalModules\AbstractExternalModule {
     public function redcap_every_page_top($project_id = null) : void {
                        
         $this->setSettings();
-       
+
         if($this->isPage("DataEntry/index.php") && $this->isEnabledForDataEntry) {
             $this->renderModule();
         }
@@ -203,10 +203,8 @@ class addressAutoComplete extends \ExternalModules\AbstractExternalModule {
     */     
     private function setSettings() : void {
 
-        //  Check if target field is of type text (also checks if field has been set)
-        if( REDCap::getFieldType($this->getProjectSetting("target-field")) != "text") {
-            return;
-        }
+
+        //  Add general validation here
 
         $this->api_source   = $this->getProjectSetting("api-source");
         $this->api_limit    = $this->getProjectSetting("api-limit");
@@ -266,8 +264,62 @@ class addressAutoComplete extends \ExternalModules\AbstractExternalModule {
             }
 
         } else {
-            //  validate targets
-            //  1. do not accept same target field
+            
+            //  Fetch raw instructions from settings
+            $instructions_raw = $this->getSubSettings("target-fields");
+
+            # Validate input
+            $has_duplicate_within_instruction = false;
+            $has_duplicate_across_instruction = false;
+            $instructions_merged=[];
+            $conflict="";
+
+            //  Do not accept duplicate fields across and within instruction
+            foreach ($instructions_raw as $i => $instruction_raw) {
+                if(count(array_unique($instruction_raw)) != count($instruction_raw)) {
+                    $has_duplicate_within_instruction = true;
+                    break;
+                }
+
+                foreach ($instruction_raw as $key => $value) {
+                    if( !in_array($value, $instructions_merged[$key])) {
+                        $instructions_merged[$key][] = $value;
+                    } else {
+                        $has_duplicate_across_instruction = true;
+                        $conflict=[$value, $key, $i];
+                        break;
+                    }                    
+                }
+            }
+
+            if($has_duplicate_within_instruction || $has_duplicate_across_instruction) {
+                $error_message = "Invalid configuration in module <b>".$this->getModuleName()."</b>. The field <code>". $conflict[0]."</code> has been used too often in ".($conflict[2]+1).". Instruction. You cannot use a field multiple times as a target. Please adjust module configuration so that the module can be activated.";
+                ?>
+                <script type="text/javascript" >
+                    console.log('<?= $error_message ?>');
+                    $(function() {
+                        var html = '<div style="max-width:800px;margin:2px 0 2px;border-color:#ffeeba!important; margin-bottom:20px;" class="alert alert-warning" role="alert"><b>Warning</b><br><?= $error_message ?></div>';
+                        $("#subheader").after(html);
+                    });                    
+                </script>
+                <?php
+                return;
+            }
+           
+            foreach ($instructions_raw as $key => $instruction_raw) {
+                $this->instructions[$key] = array(
+                    "target_field"      => $instruction_raw["target-field"],
+                    "target_meta"       => $instruction_raw["target-meta"],
+                    "advanced_fields"   => array(
+                        "street"    => $instruction_raw["field-street"],
+                        "number"    => $instruction_raw["field-number"],
+                        "code"      => $instruction_raw["field-code"],
+                        "city"      => $instruction_raw["field-city"],
+                        "country"   => $instruction_raw["field-country"],
+                        "note"      => $instruction_raw["field-note"]
+                    )
+                );
+            }
 
             //  loop through all of them and populate instructions with map
         }
