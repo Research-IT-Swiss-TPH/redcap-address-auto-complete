@@ -81,12 +81,12 @@ STPH_addressAutoComplete.init = function() {
           //  Add event listener
           $('#custom-address-modal-wrapper-'+iid.f+' #custom-address-modal .custom-address-form').on('submit', function(event) {
             event.preventDefault();
-            var street = $('#custom-street').val();
-            var number = $('#custom-number').val();
-            var code = $('#custom-code').val();
-            var city = $('#custom-city').val();
-            var country = $('#custom-country').val();
-            var note = $('#custom-note').val();
+            var street = $('#custom-address-modal-wrapper-'+iid.f+' #custom-street').val();
+            var number = $('#custom-address-modal-wrapper-'+iid.f+' #custom-number').val();
+            var code = $('#custom-address-modal-wrapper-'+iid.f+' #custom-code').val();
+            var city = $('#custom-address-modal-wrapper-'+iid.f+' #custom-city').val();
+            var country = $('#custom-address-modal-wrapper-'+iid.f+' #custom-country').val();
+            var note = $('#custom-address-modal-wrapper-'+iid.f+' #custom-note').val();
             
             var customAddress = street + " " + number + ", " + city + " " + code + "-" + country + " " + note;
     
