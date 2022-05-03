@@ -112,6 +112,7 @@
             "key": "target-fields",
             "type": "sub_settings",
             "name": "Target Fields",
+            "repeatable": true,
             "branchingLogic": {
                 "field": "api-source",
                 "op": "<>",
