@@ -104,105 +104,104 @@
             }
         },
         {
-            "key": "target-field",
-            "type": "field-list",
-            "name": "<b>Target Field</b><br>Select target field to be transformed into Address Auto-Complete",
-            "required": true,
-            "branchingLogic": {
-                "field": "api-source",
-                "op": "<>",
-                "value": ""
-            }
-        },
-        {
             "key": "enable-advanced-save",
             "type": "checkbox",
             "name": "Enable advanced save"
         },
         {
-            "key": "field-street",
-            "name": "<i>Street</i>",
-            "type": "field-list",
-            "required": true,
+            "key": "target-fields",
+            "type": "sub_settings",
+            "name": "Instruction",
+            "repeatable": true,
             "branchingLogic": {
-                "field": "enable-advanced-save",
-                "op": "=",
-                "value": 1
-            }
-        },
-        {
-            "key": "field-number",
-            "name": "<i>Number</i>",
-            "type": "field-list",
-            "required": true,
-            "branchingLogic": {
-                "field": "enable-advanced-save",
-                "op": "=",
-                "value": 1
-            }
-        },
-        {
-            "key": "field-code",
-            "name": "<i>Post Code</i>",
-            "type": "field-list",
-            "required": true,
-            "branchingLogic": {
-                "field": "enable-advanced-save",
-                "op": "=",
-                "value": 1
-            }
-        },
-        {
-            "key": "field-city",
-            "name": "<i>City</i>",
-            "type": "field-list",
-            "required": true,
-            "branchingLogic": {
-                "field": "enable-advanced-save",
-                "op": "=",
-                "value": 1
-            }
-        },
-        {
-            "key": "field-country",
-            "name": "<i>Country</i>",
-            "type": "field-list",
-            "required": false,
-            "branchingLogic": {
-                "field": "enable-advanced-save",
-                "op": "=",
-                "value": 1
-            }
-        },
-        {
-            "key": "field-note",
-            "name": "<i>Note(s)</i>",
-            "type": "field-list",
-            "required": false,
-            "branchingLogic": {
-                "field": "enable-advanced-save",
-                "op": "=",
-                "value": 1
-            }
-        },        
-        {
-            "key": "target-meta",
-            "type": "field-list",
-            "name": "Target Meta<br>Select meta field where additional geo information should be saved",
-            "branchingLogic": {
-               "conditions": [
-                   {
-                    "field": "api-source",
-                    "op": "<>",
-                    "value": ""
-                   },
-                   {
-                    "field": "target-field",
-                    "op": "<>",
-                    "value": ""
-                   }
-               ]
-            }
+                "field": "api-source",
+                "op": "<>",
+                "value": ""
+            },            
+            "sub_settings": [
+                {
+                    "key": "target-field",
+                    "type": "field-list",
+                    "name": "<b>Target Field</b><br>Select target field to be transformed into Address Auto-Complete",
+                    "required": true
+                },
+                {
+                    "key": "field-street",
+                    "name": "<i>Street</i>",
+                    "type": "field-list",
+                    "required": true,
+                    "branchingLogic": {
+                        "field": "enable-advanced-save",
+                        "op": "=",
+                        "value": 1
+                    }
+                },
+                {
+                    "key": "field-number",
+                    "name": "<i>Number</i>",
+                    "type": "field-list",
+                    "required": true,
+                    "branchingLogic": {
+                        "field": "enable-advanced-save",
+                        "op": "=",
+                        "value": 1
+                    }
+                },
+                {
+                    "key": "field-code",
+                    "name": "<i>Post Code</i>",
+                    "type": "field-list",
+                    "required": true,
+                    "branchingLogic": {
+                        "field": "enable-advanced-save",
+                        "op": "=",
+                        "value": 1
+                    }
+                },
+                {
+                    "key": "field-city",
+                    "name": "<i>City</i>",
+                    "type": "field-list",
+                    "required": true,
+                    "branchingLogic": {
+                        "field": "enable-advanced-save",
+                        "op": "=",
+                        "value": 1
+                    }
+                },
+                {
+                    "key": "field-country",
+                    "name": "<i>Country</i>",
+                    "type": "field-list",
+                    "required": false,
+                    "branchingLogic": {
+                        "field": "enable-advanced-save",
+                        "op": "=",
+                        "value": 1
+                    }
+                },
+                {
+                    "key": "field-note",
+                    "name": "<i>Note(s)</i>",
+                    "type": "field-list",
+                    "required": false,
+                    "branchingLogic": {
+                        "field": "enable-advanced-save",
+                        "op": "=",
+                        "value": 1
+                    }
+                },        
+                {
+                    "key": "target-meta",
+                    "type": "field-list",
+                    "name": "Target Meta<br>Select meta field where additional geo information should be saved",
+                    "branchingLogic": {
+                        "field": "target-field",
+                        "op": "<>",
+                        "value": ""
+                    }
+                }
+            ]
         },
         {
             "key": "output-format",

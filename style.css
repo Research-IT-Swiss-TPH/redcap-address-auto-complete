@@ -39,7 +39,7 @@ form#form input[type="text"].address-auto-complete-input {
     background-size: calc(.75em + .375rem) calc(.75em + .375rem);    
 }
 
-#aac-meta {
+.aac-meta {
     display: none;
 }
 
@@ -50,7 +50,7 @@ form#form input[type="text"].address-auto-complete-input {
     margin-right:10%;
 }
 
-#aac-custom-address-btn {
+.aac-custom-address-btn {
     font-size: 90%!important;
     text-decoration: underline!important;
     float:right;

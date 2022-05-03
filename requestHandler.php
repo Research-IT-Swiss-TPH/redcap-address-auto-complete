@@ -25,8 +25,6 @@ else if($_REQUEST['action'] == 'getConfigDescription') {
 
     $pid = htmlentities($_POST["pid"], ENT_QUOTES);
     $source = htmlentities($_POST["source"], ENT_QUOTES);
-
-
     
     $module->getConfigDescription($pid,$source);
 }

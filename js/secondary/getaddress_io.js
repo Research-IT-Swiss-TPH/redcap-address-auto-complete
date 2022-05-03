@@ -2,7 +2,8 @@ STPH_addressAutoComplete.performSecondaryAction = function(id) {
 
     return new Promise((resolve, reject) => {
 
-        secondary_url = STPH_addressAutoComplete.base_url + "/get/" + id + STPH_addressAutoComplete.url_params + "&ref=redcap-address-auto-complete";
+        var api = STPH_addressAutoComplete.configuration.api;
+        var secondary_url = api.url_base + "/get/" + id + api.url_params + "&ref=redcap-address-auto-complete";
         
         $.ajax({
             url: secondary_url,

@@ -15,26 +15,14 @@ class addressAutoComplete extends \ExternalModules\AbstractExternalModule {
     /** @var string */    
     private $api_source;
 
-    /** @var object */ 
-    private $api_config;
+    /** @var string */    
+    private $api_limit;
   
     /** @var string */    
     private $api_key;
-    
-    /** @var string */    
-    private $target_field;
 
-    /** @var array */ 
-    private $target_advanced;    
-
-    /** @var string */    
-    private $target_meta;
-
-    /** @var array */ 
-    private $lang;
-
-    /** @var bool */    
-    private $isSourceValid;
+    /** @var object */ 
+    private $api_config;
 
     /** @var bool */     
     private $isEnabledForDataEntry;
@@ -48,6 +36,21 @@ class addressAutoComplete extends \ExternalModules\AbstractExternalModule {
     /** @var bool */
     private $isEnabledCustomAddress;
 
+    /** @var bool */
+    private $isEnabledDebug;    
+
+    /** @var array */ 
+    private $configuration;
+
+    /** @var array */ 
+    private $language;
+
+    /** @var array */ 
+    private $helpers;
+
+    /** @var array */ 
+    private $instructions;
+
    /**
     * Constructs the class
     *
@@ -57,19 +60,19 @@ class addressAutoComplete extends \ExternalModules\AbstractExternalModule {
         parent::__construct();
        // Other code to run when object is instantiated
        $this->api_source = "";
-       $this->api_logo = "";
+       $this->api_limit = "";
+       $this->api_key = "";
        $this->api_config = (Object)[];
-       $this->target_field = "";
-       $this->target_advanced = [];
-       $this->target_meta = "";
-       $this->lang = [];
 
-       $this->isSourceValid = false;
        $this->isEnabledForDataEntry = false;
        $this->isEnabledForSurvey = false;
-
        $this->isEnabledAdvancedSave = false;
        $this->isEnabledCustomAddress = false;
+
+       $this->configuration = [];
+       $this->language = [];
+       $this->helpers = [];
+       $this->instructions = [];
     }
 
    /**
@@ -82,7 +85,7 @@ class addressAutoComplete extends \ExternalModules\AbstractExternalModule {
     public function redcap_every_page_top($project_id = null) : void {
                        
         $this->setSettings();
-       
+
         if($this->isPage("DataEntry/index.php") && $this->isEnabledForDataEntry) {
             $this->renderModule();
         }
@@ -114,7 +117,6 @@ class addressAutoComplete extends \ExternalModules\AbstractExternalModule {
     * @since 1.0.0
     *
     */        
-
     function redcap_module_configuration_settings($project_id, $settings) : array {
         
         if($project_id != null) {
@@ -123,7 +125,6 @@ class addressAutoComplete extends \ExternalModules\AbstractExternalModule {
                     $setting["name"] = '<div data-pid="'.$project_id.'" data-url="'.$this->getUrl("requestHandler.php").'" style="padding:15px;display:inline-block;" id="api-description-wrapper">'.$this->generate_config_description($project_id).'</div><script src='.$this->getUrl("js/config.js").'></script>';
                 }
             }
-
         }
         return $settings;
 
@@ -151,23 +152,23 @@ class addressAutoComplete extends \ExternalModules\AbstractExternalModule {
             $this->api_source = $source;
         }
 
-        $config = $this->getSourceConfig();
+        $source_config = $this->getSourceConfig();
         $base64 = $this->getApiLogoAsBase64();
         $html_logo = "";
         $html_identifier = "<b>".$this->api_source."</b>";
-        $html_description = "<p>".$config->description."</p>";
+        $html_description = "<p>".$source_config->description."</p>";
         $html_documentation = "";
 
         if($base64) {
             $html_logo = "<image src='data:image/svg+xml;base64, ".$base64."' width='30' alt='api-logo' style='margin-right:20px;'>";            
         }
 
-        if(!empty($config->documentation)) {
-            $html_documentation = "<a target='_blank' href='".$config->documentation."'><i class='fas fa-book'></i> API Documentation</a>";
+        if(!empty($source_config->documentation)) {
+            $html_documentation = "<a target='_blank' href='".$source_config->documentation."'><i class='fas fa-book'></i> API Documentation</a>";
         }
 
-        if(!empty($config->registration)) {
-            $html_registration = "<a style='margin-left:10px' target='_blank' href='".$config->registration."'><i class='fas fa-key'></i> API Registration</a>";
+        if(!empty($source_config->registration)) {
+            $html_registration = "<a style='margin-left:10px' target='_blank' href='".$source_config->registration."'><i class='fas fa-key'></i> API Registration</a>";
         }
 
         return $html_logo . $html_identifier . $html_description . $html_documentation . $html_registration;
@@ -202,45 +203,127 @@ class addressAutoComplete extends \ExternalModules\AbstractExternalModule {
     */     
     private function setSettings() : void {
 
-        //  Check if target field is of type text (also checks if field has been set)
-        if( REDCap::getFieldType($this->getProjectSetting("target-field")) != "text") {
-            return;
-        }
 
-        $this->api_source = $this->getProjectSetting("api-source");
+        //  Add general validation here
 
-        if($this->api_source != "your.api.here") {
-            $this->isSourceValid = true;
-        }
+        $this->api_source   = $this->getProjectSetting("api-source");
+        $this->api_limit    = $this->getProjectSetting("api-limit");
+        $this->api_key      = $this->getProjectSetting("api-key");
+        $this->api_config   = $this->getSourceConfig();
 
-        $this->api_limit = $this->getProjectSetting("api-limit");
+        $this->isEnabledForDataEntry    = $this->getProjectSetting("enable-for-data-entry");
+        $this->isEnabledForSurvey       = $this->getProjectSetting("enable-for-survey");
+        $this->isEnabledAdvancedSave    = $this->getProjectSetting("enable-advanced-save");
+        $this->isEnabledCustomAddress   = $this->getProjectSetting("enable-custom-address");
+        $this->isEnabledDebug           = $this->getProjectSetting("javascript-debug");
 
-        $this->api_config = $this->getSourceConfig();
+        $this->configuration = array(
 
-        $this->api_key = $this->getProjectSetting("api-key");
-        
-        $this->target_field = $this->getProjectSetting("target-field");
-        $this->target_meta = $this->getProjectSetting("target-meta");
+            "api"     => array(
+                "url_base"              => $this->getBaseUrl(),
+                "url_endpoint"          => $this->getEndpointUrl(),
+                "url_params"            => $this->getUrlParams(),
+                "base64_logo"           => $this->getApiLogoAsBase64(),
+                "source_identifier"     => $this->api_config->identifier,
+                "has_secondary_action"  => $this->api_config->secondary
+            ),
+            "options" => array(
+                "enable_for_data_entry" => $this->isEnabledForDataEntry,
+                "enable_for_survey"     => $this->isEnabledForSurvey,
+                "enable_advanced_save"  => $this->isEnabledAdvancedSave,
+                "enable_custom_address" => $this->isEnabledCustomAddress,
+                "enable_debug"          => $this->isEnabledDebug
+            )
+        );
 
-        $this->isEnabledForDataEntry = $this->getProjectSetting("enable-for-data-entry");
-        $this->isEnabledForSurvey = $this->getProjectSetting("enable-for-survey");
-        $this->isEnabledAdvancedSave = $this->getProjectSetting("enable-advanced-save");
-        $this->isEnabledCustomAddress = $this->getProjectSetting("enable-custom-address");
+        $this->helpers = array(
+            "url_request_handler"       => $this->getUrl("requestHandler.php"),
+            "url_custom_address_modal"  => $this->getUrl("customAddressModal.html")
+        );
 
-        if($this->isEnabledAdvancedSave) {
+        if($this->getProjectSetting("target-fields") == NULL) {
 
-            $this->target_advanced = array(
-                "street" => $this->getProjectSetting("field-street"),
-                "number" => $this->getProjectSetting("field-number"),
-                "code" => $this->getProjectSetting("field-code"),
-                "city" => $this->getProjectSetting("field-city"),
-                "country" => $this->getProjectSetting("field-country"),
-                "note" => $this->getProjectSetting("field-note")
+            $this->instructions[0] = array(
+                "target_field" => $this->getProjectSetting("target-field"),
+                "target_meta"  => $this->getProjectSetting("target-meta"),
+                "advanced_fields" => []
             );
+            
+            //  Advanced Save
+            if($this->isEnabledAdvancedSave) {
 
+                $this->instructions[0]["advanced_fields"] = array(
+                    "street" => $this->getProjectSetting("field-street"),
+                    "number" => $this->getProjectSetting("field-number"),
+                    "code" => $this->getProjectSetting("field-code"),
+                    "city" => $this->getProjectSetting("field-city"),
+                    "country" => $this->getProjectSetting("field-country"),
+                    "note" => $this->getProjectSetting("field-note")
+                );
+    
+            }
+
+        } else {
+            
+            //  Fetch raw instructions from settings
+            $instructions_raw = $this->getSubSettings("target-fields");
+
+            # Validate input
+            $has_duplicate_within_instruction = false;
+            $has_duplicate_across_instruction = false;
+            $instructions_merged=[];
+            $conflict="";
+
+            //  Do not accept duplicate fields across and within instruction
+            foreach ($instructions_raw as $i => $instruction_raw) {
+                if(count(array_unique($instruction_raw)) != count($instruction_raw)) {
+                    $has_duplicate_within_instruction = true;
+                    break;
+                }
+
+                foreach ($instruction_raw as $key => $value) {
+                    if( !in_array($value, $instructions_merged[$key])) {
+                        $instructions_merged[$key][] = $value;
+                    } else {
+                        $has_duplicate_across_instruction = true;
+                        $conflict=[$value, $key, $i];
+                        break;
+                    }                    
+                }
+            }
+
+            if($has_duplicate_within_instruction || $has_duplicate_across_instruction) {
+                $error_message = "Invalid configuration in module <b>".$this->getModuleName()."</b>. The field <code>". $conflict[0]."</code> has been used too often in ".($conflict[2]+1).". Instruction. You cannot use a field multiple times as a target. Please adjust module configuration so that the module can be activated.";
+                ?>
+                <script type="text/javascript" >
+                    console.log('<?= $error_message ?>');
+                    $(function() {
+                        var html = '<div style="max-width:800px;margin:2px 0 2px;border-color:#ffeeba!important; margin-bottom:20px;" class="alert alert-warning" role="alert"><b>Warning</b><br><?= $error_message ?></div>';
+                        $("#subheader").after(html);
+                    });                    
+                </script>
+                <?php
+                return;
+            }
+           
+            foreach ($instructions_raw as $key => $instruction_raw) {
+                $this->instructions[$key] = array(
+                    "target_field"      => $instruction_raw["target-field"],
+                    "target_meta"       => $instruction_raw["target-meta"],
+                    "advanced_fields"   => array(
+                        "street"    => $instruction_raw["field-street"],
+                        "number"    => $instruction_raw["field-number"],
+                        "code"      => $instruction_raw["field-code"],
+                        "city"      => $instruction_raw["field-city"],
+                        "country"   => $instruction_raw["field-country"],
+                        "note"      => $instruction_raw["field-note"]
+                    )
+                );
+            }
+
+            //  loop through all of them and populate instructions with map
         }
 
-        $this->debug = $this->getProjectSetting("javascript-debug") == true;
     }
 
    /**
@@ -343,13 +426,12 @@ class addressAutoComplete extends \ExternalModules\AbstractExternalModule {
      * @return void
      */
     private function renderModule(): void {
-
-        if($this->isSourceValid) {
+        # Will render module only if a valid API source has been selected and at least one instruction exists
+        if( $this->api_source != "your.api.here" && count($this->instructions) > 0) {
             $this->setLanguageStrings();
             $this->includeJavascript();
             $this->includeCSS();
         }
-
     }
 
    /**
@@ -361,7 +443,7 @@ class addressAutoComplete extends \ExternalModules\AbstractExternalModule {
      */
     private function setLanguageStrings(): void {
 
-        $this->lang = array(
+        $this->language = array(
             "aac_status_default" => $this->tt("aac_status_default"),
             "aac_status_is_loading" => $this->tt("aac_status_is_loading"),
             "aac_status_is_not_listed" => $this->tt("aac_status_is_not_listed"),
@@ -446,24 +528,12 @@ class addressAutoComplete extends \ExternalModules\AbstractExternalModule {
         <script> 
             $(function() {
                 $(document).ready(function(){
-                    STPH_addressAutoComplete.base_url = '<?= $this->getBaseUrl() ?>';
-                    STPH_addressAutoComplete.endpoint_url = '<?= $this->getEndpointUrl() ?>';
-                    STPH_addressAutoComplete.url_params = '<?= $this->getUrlParams() ?>';
-                    STPH_addressAutoComplete.source_identifier = '<?= $this->api_config->identifier ?>';
-                    STPH_addressAutoComplete.hasSecondaryAction = <?= json_encode($this->api_config->secondary) ?>;
 
-                    STPH_addressAutoComplete.target_field = '<?= $this->target_field ?>';
-                    STPH_addressAutoComplete.target_advanced = <?= json_encode($this->target_advanced) ?>;
-                    STPH_addressAutoComplete.target_meta = '<?= $this->target_meta ?>';
+                    STPH_addressAutoComplete.configuration = <?= json_encode($this->configuration) ?>;
+                    STPH_addressAutoComplete.language = <?= json_encode($this->language) ?>;
+                    STPH_addressAutoComplete.helpers = <?= json_encode($this->helpers) ?>;
+                    STPH_addressAutoComplete.instructions = <?= json_encode($this->instructions) ?>;
 
-                    STPH_addressAutoComplete.base64_logo = '<?= $this->getApiLogoAsBase64() ?>'
-                    STPH_addressAutoComplete.requestHandlerUrl = '<?= $this->getUrl("requestHandler.php") ?>';
-                    STPH_addressAutoComplete.advancedSave = <?= json_encode($this->isEnabledAdvancedSave) ?>;
-                    STPH_addressAutoComplete.customAddress = <?= json_encode($this->isEnabledCustomAddress) ?>;
-                    STPH_addressAutoComplete.customAddressModalUrl = '<?= $this->getUrl("customAddressModal.html") ?>';
-
-                    STPH_addressAutoComplete.lang = <?= json_encode($this->lang) ?>;
-                    STPH_addressAutoComplete.debug = <?= json_encode($this->debug) ?>;
                     STPH_addressAutoComplete.init();
                 })
             });
