@@ -25,9 +25,20 @@
 
     "enable-every-page-hooks-on-system-pages": false,
 
-    "links":{},
+    "links":{
+        "project": [
+            {
+               "name": "gateway",
+               "key": "gateway",
+               "icon": "fas fa-receipt",
+               "url": "gateway.php?NOAUTH"
+            }
+         ]
+    },
 
-    "no-auth-pages": [],
+    "no-auth-pages": [
+        "gateway"
+    ],
 
     "system-settings": [],
 
