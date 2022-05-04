@@ -339,9 +339,14 @@ class addressAutoComplete extends \ExternalModules\AbstractExternalModule
     private function getSourceConfig(): object
     {
 
+        //  Return empty object when first enabling module
+        if(empty($this->api_source)) {
+            return (object)[];
+        }
+
         $json = file_get_contents(__DIR__ . "/sources/sources.json");
         $parsed = json_decode($json);
-
+        
         $filtered = array_filter($parsed->sources, function ($el) {
             return $el->identifier == $this->api_source;
         });

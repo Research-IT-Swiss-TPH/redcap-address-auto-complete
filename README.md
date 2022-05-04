@@ -55,7 +55,7 @@ getaddress.io  | United Kingdom       | 20 / Day       | yes            |
 
 ## Roadmap
 
-- Update docs for version 1.2.0
+- Update docs for latest version (2.1.0)
 - Improve Source Validation before Module render.
 
 ## Changelog
@@ -66,3 +66,4 @@ v1.0.0  | Initial release.
 v1.1.0  | New Features: Custom Addresses input, Advanced Save for address data in target fields
 v1.2.0  | New API Source: United Kingdom - getaddress.io
 v2.0.0  | Added support for multiple targets: it is possible to declare multiple instructions that can even run on the same page.
+v2.1.0  | Fix: Full Support for Survey Page added.
