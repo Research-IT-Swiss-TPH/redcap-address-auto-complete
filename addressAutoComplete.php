@@ -102,19 +102,10 @@ class addressAutoComplete extends \ExternalModules\AbstractExternalModule
      */
     function redcap_survey_page_top(): void
     {
-        $this->temp();
+
         if ($this->isEnabledForSurvey) {
             $this->renderModule();
         }
-    }
-
-    public function temp()
-    {
-        $this->private_hello();
-    }
-
-    private function private_hello() {
-        echo "Private Hello";
     }
 
 
@@ -250,7 +241,11 @@ class addressAutoComplete extends \ExternalModules\AbstractExternalModule
 
         $this->helpers = array(
             "url_request_handler"       => $this->getUrl("requestHandler.php"),
-            "url_custom_address_modal"  => $this->getUrl("customAddressModal.html")
+            "url_custom_address_modal"  => $this->getUrl("customAddressModal.html"),
+            "url_gateway"               => $this->getUrl("gateway.php") . "&NOAUTH",
+            "session_id"                => session_id(),
+            "survey_hash"               => htmlentities($_GET["s"], ENT_QUOTES),
+            "is_survey_page"            => ((isset($_GET['s']) && PAGE == "surveys/index.php" && defined("NOAUTH")) || PAGE == "Surveys/theme_view.php")
         );
 
         if ($this->getProjectSetting("target-fields") == NULL) {
@@ -499,6 +494,13 @@ class addressAutoComplete extends \ExternalModules\AbstractExternalModule
         echo json_encode($response);
     }
 
+    public function mapResultsFromGateway($source, $results, $pid) {
+        header('Content-Type: application/json; charset=UTF-8');
+        $response = $this->getMappedResultsBySource($source, $results, $pid);
+        echo json_encode($response);
+    }
+
+
     /**
      * Gets Mapped Results by Source
      *
@@ -508,15 +510,15 @@ class addressAutoComplete extends \ExternalModules\AbstractExternalModule
      * @since 1.0.0
      *
      */
-    private function getMappedResultsBySource($identifier, $data): ?array
+    private function getMappedResultsBySource($identifier, $data, $pid=null): ?array
     {
 
         //  Replace dots with underscores
         $class = str_replace(".", "_", $identifier);
 
         //  Get output format from settings
-        $format = $this->getProjectSetting("output-format");
-
+        $format = $this->getProjectSetting("output-format", $pid);
+        
         //  Include class if not exists
         $path = $this->getSafePath(__DIR__ . "/sources/" . $class . ".source.php");
         if (!class_exists($class)) include_once($path);

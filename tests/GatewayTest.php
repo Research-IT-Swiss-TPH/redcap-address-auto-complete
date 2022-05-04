@@ -11,17 +11,5 @@ use \GuzzleHttp\Exception\ClientException;
 
 final class GatewayTest extends BaseTest {
 
-    private $http;
-    private $base_url;
-
-
-    public function testFoo() {
-
-        $expected = "foo";
-        $actual  = "foo";
-        
-        $this->assertSame($expected, $actual);
-    }
-
 
 }
