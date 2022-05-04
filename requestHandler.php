@@ -11,7 +11,6 @@ if ($_REQUEST['action'] == 'mapResults') {
 
     $source = htmlentities($_POST["source"], ENT_QUOTES);
     $results = json_decode($_POST["results"]);
-
     
     $module->mapResults($source, $results);
 }

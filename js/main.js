@@ -171,9 +171,15 @@ STPH_addressAutoComplete.init = function() {
             success: function(data){          
               STPH_addressAutoComplete.log("Results have been fetched.")
               
-              //  Mapping Request to REDCap backend
-              var backend = help.url_request_handler + "&action=mapResults";        
+              //  Mapping Request to REDCap backend or gateway
+              var backend = help.url_request_handler + "&action=mapResults"
+              if(help.is_survey_page) {
+                backend = help.url_gateway;
+              }
+
               $.post(backend, {
+                session_id: help.session_id,
+                survey_hash: help.survey_hash,
                 source: api.source_identifier,
                 results: JSON.stringify(Object.values(data)[0])
               })
