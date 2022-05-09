@@ -281,12 +281,15 @@ class addressAutoComplete extends \ExternalModules\AbstractExternalModule
 
             //  Do not accept duplicate fields across and within instruction
             foreach ($instructions_raw as $i => $instruction_raw) {
-                if (count(array_unique($instruction_raw)) != count($instruction_raw)) {
+
+                $instruction_filtered = array_filter($instruction_raw);
+
+                if (count(array_unique($instruction_filtered)) != count($instruction_filtered)) {
                     $has_duplicate_within_instruction = true;
                     break;
                 }
 
-                foreach ($instruction_raw as $key => $value) {
+                foreach ($instruction_filtered as $key => $value) {
                     if (!in_array($value, $instructions_merged[$key])) {
                         $instructions_merged[$key][] = $value;
                     } else {
@@ -298,7 +301,7 @@ class addressAutoComplete extends \ExternalModules\AbstractExternalModule
             }
 
             if ($has_duplicate_within_instruction || $has_duplicate_across_instruction) {
-                $error_message = "Invalid configuration in module <b>" . $this->getModuleName() . "</b>. The field <code>" . $conflict[0] . "</code> has been used too often in " . ($conflict[2] + 1) . ". Instruction. You cannot use a field multiple times as a target. Please adjust module configuration so that the module can be activated.";
+                $error_message = "Invalid configuration in module <b>" . $this->getModuleName() . "</b>. The field <code>" . $conflict[0] . "</code>a has been used too often in " . ($conflict[2] + 1) . ". Instruction. You cannot use a field multiple times as a target. Please adjust module configuration so that the module can be activated.";
 ?>
                 <script type="text/javascript">
                     console.log('<?= $error_message ?>');
