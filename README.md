@@ -67,3 +67,4 @@ v1.1.0  | New Features: Custom Addresses input, Advanced Save for address data i
 v1.2.0  | New API Source: United Kingdom - getaddress.io
 v2.0.0  | Added support for multiple targets: it is possible to declare multiple instructions that can even run on the same page.
 v2.1.0  | Fix: Full Support for Survey Page added.
+v3.0.0  | Upgrade to Module Framework version 9.
