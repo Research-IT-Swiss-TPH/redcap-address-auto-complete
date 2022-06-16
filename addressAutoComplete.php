@@ -245,7 +245,8 @@ class addressAutoComplete extends \ExternalModules\AbstractExternalModule
             "url_gateway"               => $this->getUrl("gateway.php") . "&NOAUTH",
             "session_id"                => session_id(),
             "survey_hash"               => htmlentities($_GET["s"], ENT_QUOTES),
-            "is_survey_page"            => ((isset($_GET['s']) && PAGE == "surveys/index.php" && defined("NOAUTH")) || PAGE == "Surveys/theme_view.php")
+            "is_survey_page"            => ((isset($_GET['s']) && PAGE == "surveys/index.php" && defined("NOAUTH")) || PAGE == "Surveys/theme_view.php"),
+            "csrf_token"                => $this->getCSRFToken()
         );
 
         if ($this->getProjectSetting("target-fields") == NULL) {

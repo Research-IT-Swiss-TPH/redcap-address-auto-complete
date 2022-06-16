@@ -181,7 +181,8 @@ STPH_addressAutoComplete.init = function() {
                 session_id: help.session_id,
                 survey_hash: help.survey_hash,
                 source: api.source_identifier,
-                results: JSON.stringify(Object.values(data)[0])
+                results: JSON.stringify(Object.values(data)[0]),
+                redcap_csrf_token: help.csrf_token
               })
               .done(function(mappedData){
                 STPH_addressAutoComplete.log("Data has been mapped.")
