@@ -40,8 +40,8 @@ while($project = $projects->fetch_assoc()){
 }
 //  Retrieve pid for current survey_hash
 $survey_pid = "";
-$sql = "select project_id from redcap_surveys where survey_id = (select survey_id from redcap_surveys_participants where hash = '$survey_hash')";
-$q = db_query($sql);
+$sql = "select project_id from redcap_surveys where survey_id = (select survey_id from redcap_surveys_participants where hash = ?)";
+$q = $module->query($sql, [$survey_hash]);
 $result = db_fetch_assoc($q);
 $survey_pid = $result["project_id"];
 
