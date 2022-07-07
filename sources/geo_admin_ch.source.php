@@ -13,6 +13,9 @@ class geo_admin_ch extends source {
         //  The following string transformation are used to get the isolated address parts
         $l = $value->attrs->label;
 
+        //  Feature Id is equivalent to egid_edid and has been added per request instead of address_id
+        $feature_id = $value->attrs->featureId;
+
         $l_sn = strip_tags(substr($l, 0, strpos($l, "<") - 1));
 
         $address->parts->street = substr($l_sn, 0, strcspn( $l_sn , '0123456789' ) - 1);
@@ -26,7 +29,7 @@ class geo_admin_ch extends source {
         //  Meta information that are important for enabling data analysis and keeping data consistency
         $address->meta->x = $value->attrs->x;
         $address->meta->y = $value->attrs->y;
-        $address->meta->id = $value->id;
+        $address->meta->id = $feature_id;
 
         return $address;       
 
