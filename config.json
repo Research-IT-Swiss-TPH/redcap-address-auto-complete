@@ -203,6 +203,12 @@
                         "op": "<>",
                         "value": ""
                     }
+                },
+                {
+                    "key": "timestamp",
+                    "type": "field-list",
+                    "name": "Date Created<br>Select field where date of response creation should be saved",
+                    "required": false
                 }
             ]
         },

@@ -327,7 +327,8 @@ class addressAutoComplete extends \ExternalModules\AbstractExternalModule
                         "city"      => $instruction_raw["field-city"],
                         "country"   => $instruction_raw["field-country"],
                         "note"      => $instruction_raw["field-note"]
-                    )
+                    ),
+                    "timestamp_field" => $instruction_raw["timestamp"]
                 );
             }
         }

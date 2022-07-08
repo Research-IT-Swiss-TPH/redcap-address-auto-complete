@@ -40,11 +40,13 @@ STPH_addressAutoComplete.init = function() {
     var iid = {
       f: instruction.target_field,
       m: instruction.target_meta,
-      a: instruction.advanced_fields
+      a: instruction.advanced_fields,
+      t: instruction.timestamp_field
     };
 
     var target_field = $('#'+iid.f+'-tr').find('input');
     var target_meta  = $('#'+iid.m+'-tr').find('input');
+    var timestamp_field = $('#'+iid.t+'-tr').find('input');
 
     //  Check if field exists on current form/survey
     if(target_field.length > 0) {
@@ -248,7 +250,7 @@ STPH_addressAutoComplete.init = function() {
             .then( (ui_s) => {
               
               //  Save meta data
-              target_meta.val(ui.item.meta.id + ", " + ui_s.y + ", " + ui_s.x)
+              target_meta.val(ui.item.meta.id + ", " + ui_s.y + ", " + ui_s.x)            
 
               //  If advanced save is enabled save parts as well
               if(STPH_addressAutoComplete.configuration.options.enable_advanced_save) {
@@ -271,8 +273,13 @@ STPH_addressAutoComplete.init = function() {
             }
             
             STPH_addressAutoComplete.log("A valid address has been selected. Meta and Field has been set.")
-
           }
+
+          //  Save timestamp if it has been configured
+          if(timestamp_field) {
+            timestamp_field.val(new Date().toISOString().split('T')[0])
+          }
+
         }
       });
 
@@ -371,6 +378,7 @@ STPH_addressAutoComplete.resetFields = function(iid) {
   var target_field = $('#'+iid.f+'-tr').find('input');
   var target_meta = $('#'+iid.m+'-tr').find('input');
   var target_aac = $('#'+iid.f+'-tr').find('input#address-auto-complete-'+iid.f);
+  var timestamp_field = $('#'+iid.t+'-tr').find('input');
   
   target_aac.val("");
   target_aac.prop("disabled", false);
@@ -378,6 +386,10 @@ STPH_addressAutoComplete.resetFields = function(iid) {
 
   target_field.val("");
   target_meta.val("");
+
+  if(timestamp_field) {
+    timestamp_field.val("");
+  }
 
   if(STPH_addressAutoComplete.configuration.options.enable_advanced_save) {
     var as_data = { street: "", number:  "", code: "", city: "", country: "", note: ""};
