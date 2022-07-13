@@ -241,8 +241,8 @@ class addressAutoComplete extends \ExternalModules\AbstractExternalModule
 
         $this->helpers = array(
             "url_request_handler"       => $this->getUrl("requestHandler.php"),
-            "url_custom_address_modal"  => $this->getUrl("customAddressModal.php"),
-            "url_gateway"               => $this->getUrl("gateway.php") . "&NOAUTH",
+            "url_custom_address_modal"  => $this->getSurveyUrl("customAddressModal.html"),
+            "url_gateway"               => $this->getSurveyUrl("gateway.php") . "&NOAUTH",
             "session_id"                => session_id(),
             "survey_hash"               => htmlentities($_GET["s"], ENT_QUOTES),
             "is_survey_page"            => ((isset($_GET['s']) && PAGE == "surveys/index.php" && defined("NOAUTH")) || PAGE == "Surveys/theme_view.php"),
@@ -594,19 +594,23 @@ class addressAutoComplete extends \ExternalModules\AbstractExternalModule
 
 
     /**
-     * Enables CORS in cases when SURVEY PATH is different than APP PATH
+     * Returns URL for the case of Survey page requests, normal URL else.
+     * Omits CORS issues.
      * 
      * @since 3.1.0
-     * @return void
+     * @return string
      * 
      */
-    public function setCORS() {
+    private function getSurveyUrl($file) {
 
         $APP_PATH_SURVEYROOT = str_replace(APP_PATH_SURVEY, "", APP_PATH_SURVEY_FULL);
 
-        if($APP_PATH_SURVEYROOT !== APP_PATH_WEBROOT_FULL ) {
-            header('Access-Control-Allow-Origin: ' . str_replace(APP_PATH_SURVEY, "", APP_PATH_SURVEY_FULL));
+        $url = $this->getUrl($file);
+        if( $APP_PATH_SURVEYROOT !== APP_PATH_WEBROOT_FULL ) {
+            $url = str_replace(APP_PATH_WEBROOT_FULL, $APP_PATH_SURVEYROOT . "/",  $url);
         }
+
+        return $url;
     }
 
 }
