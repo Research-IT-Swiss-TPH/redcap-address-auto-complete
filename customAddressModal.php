@@ -1,3 +1,7 @@
+<?php 
+  //  Fix CORS
+  $module->setCORS();
+?>
 <!-- Modal -->
 <div class="modal fade" id="custom-address-modal" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">

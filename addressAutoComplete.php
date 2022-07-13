@@ -206,7 +206,7 @@ class addressAutoComplete extends \ExternalModules\AbstractExternalModule
     private function setSettings(): void
     {
 
-
+        
         //  Add general validation here
 
         $this->api_source   = $this->getProjectSetting("api-source");
@@ -241,7 +241,7 @@ class addressAutoComplete extends \ExternalModules\AbstractExternalModule
 
         $this->helpers = array(
             "url_request_handler"       => $this->getUrl("requestHandler.php"),
-            "url_custom_address_modal"  => $this->getUrl("customAddressModal.html"),
+            "url_custom_address_modal"  => $this->getUrl("customAddressModal.php"),
             "url_gateway"               => $this->getUrl("gateway.php") . "&NOAUTH",
             "session_id"                => session_id(),
             "survey_hash"               => htmlentities($_GET["s"], ENT_QUOTES),
@@ -591,4 +591,19 @@ class addressAutoComplete extends \ExternalModules\AbstractExternalModule
         <link rel="stylesheet" href="<?= $this->getUrl('style.css') ?>">
 <?php
     }
+
+
+    /**
+     * Enables CORS in cases when SURVEY PATH is different than APP PATH
+     * 
+     */
+    public function setCORS() {
+
+        $APP_PATH_SURVEYROOT = str_replace(APP_PATH_SURVEY, "", APP_PATH_SURVEY_FULL);
+
+        if($APP_PATH_SURVEYROOT !== APP_PATH_WEBROOT_FULL ) {
+            header('Access-Control-Allow-Origin: ' . str_replace(APP_PATH_SURVEY, "", APP_PATH_SURVEY_FULL));
+        }
+    }
+
 }
