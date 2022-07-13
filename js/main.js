@@ -355,7 +355,7 @@ STPH_addressAutoComplete.setState = function(state, iid, ui=null) {
     aac_input.val(ui.item);
     aac_selection.html('<i>' +  ui.item + '</i>');
     aac_input.removeClass("is-not-listed is-listed").addClass("is-valid");
-    aac_status.html(lang.aac_status_is_custom + '<a class="no-focus-out aac-custom-address-btn" id="aac-custom-address-btn-'+iid.f+'" href="#add-custom-address">' + lang.cam_title +'</a>' + '<a style="margin-right:5px!important;" id="aac-reset-btn-'+iid.f+'" class="aac-reset-btn" href="#reset-selected-address">'+lang.aac_reset_address+'</a>');
+    aac_status.html(lang.aac_status_is_custom + '<div id="custom-address-buttons"><a class="no-focus-out aac-custom-address-btn" id="aac-custom-address-btn-'+iid.f+'" href="#add-custom-address">' + lang.cam_title +'</a>' + '<a style="margin-right:5px!important;" id="aac-reset-btn-'+iid.f+'" class="aac-reset-btn" href="#reset-selected-address">'+lang.aac_reset_address+'</a>');
 
   }
 

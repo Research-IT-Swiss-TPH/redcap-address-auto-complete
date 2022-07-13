@@ -75,3 +75,14 @@ form#form input[type="text"].address-auto-complete-input {
     width: 100% !important;
     max-width: 100% !important;
 }
+
+#custom-address-buttons {
+    text-align: right;
+    margin-right: 28px;
+    margin-top: 10px;
+}
+
+#custom-address-buttons .aac-custom-address-btn {
+    float: none!important;
+    margin-right:10px;
+}
