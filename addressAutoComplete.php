@@ -206,7 +206,7 @@ class addressAutoComplete extends \ExternalModules\AbstractExternalModule
     private function setSettings(): void
     {
 
-        
+
         //  Add general validation here
 
         $this->api_source   = $this->getProjectSetting("api-source");
@@ -595,6 +595,9 @@ class addressAutoComplete extends \ExternalModules\AbstractExternalModule
 
     /**
      * Enables CORS in cases when SURVEY PATH is different than APP PATH
+     * 
+     * @since 3.1.0
+     * @return void
      * 
      */
     public function setCORS() {
