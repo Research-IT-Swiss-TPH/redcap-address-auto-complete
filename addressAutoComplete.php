@@ -607,7 +607,7 @@ class addressAutoComplete extends \ExternalModules\AbstractExternalModule
         $IS_SURVEY_PAGE = ((isset($_GET['s']) && PAGE == "surveys/index.php" && defined("NOAUTH")) || PAGE == "Surveys/theme_view.php");
         $url = $this->getUrl($file, true , true);
         if( $APP_PATH_SURVEYROOT !== APP_PATH_WEBROOT_FULL && $IS_SURVEY_PAGE) {
-            $url = str_replace(APP_PATH_WEBROOT_FULL, $APP_PATH_SURVEYROOT . "/",  $url);
+            $url = str_replace(APP_PATH_WEBROOT_FULL, $APP_PATH_SURVEYROOT . APP_PATH_WEBROOT_PARENT,  $url);
         }
 
         return $url;
