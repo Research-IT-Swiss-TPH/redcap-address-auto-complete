@@ -291,7 +291,7 @@ class addressAutoComplete extends \ExternalModules\AbstractExternalModule
                 }
 
                 foreach ($instruction_filtered as $key => $value) {
-                    if (!in_array($value, $instructions_merged[$key])) {
+                    if (!in_array($value, (array)$instructions_merged[$key])) {
                         $instructions_merged[$key][] = $value;
                     } else {
                         $has_duplicate_across_instruction = true;
