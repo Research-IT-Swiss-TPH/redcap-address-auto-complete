@@ -133,6 +133,14 @@ STPH_addressAutoComplete.init = function() {
 
       });
 
+      //  Disable Form Submit on "Enter" Keydown
+      target_aac.on("keydown", function(event) {
+        if(event.keyCode == 13) {
+          event.preventDefault();
+          return false;          
+        }
+      });
+
       //  Register Event Listener: Focusout
       target_aac.on("focusout", function(e){
 
