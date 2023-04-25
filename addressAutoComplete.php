@@ -510,6 +510,20 @@ class addressAutoComplete extends \ExternalModules\AbstractExternalModule
         echo json_encode($response);
     }
 
+    /**
+     * Returns allowed sources 
+     * Needed for security of namespaced functions (Fix tainted call)
+     * 
+     * @since 3.4.0
+     */
+    private static function getAllowedSources(): array
+    {
+        $json = file_get_contents(__DIR__ . "/sources/sources.json");
+        $parsed = json_decode($json);
+
+        return array_column($parsed->sources, "identifier");
+    }
+
 
     /**
      * Gets Mapped Results by Source
@@ -522,6 +536,16 @@ class addressAutoComplete extends \ExternalModules\AbstractExternalModule
      */
     private function getMappedResultsBySource($identifier, $data, $pid=null): ?array
     {
+
+        //  Fix Tainted Call that could lead to running arbitrary functions ( https://psalm.dev/243 )
+        
+        //$allowedSources = self::getAllowedSources();    // psalm false negative
+        //$allowedSources = array_column((json_decode(file_get_contents("sources/sources.json")))->sources, "identifier");  // identical to getAllowedSources()
+        $allowedSources = ["geo.admin.ch", "getaddress.io"];    //hard coded works
+
+        if(!in_array($identifier,  $allowedSources, true)) {
+           return [];
+        }
 
         //  Replace dots with underscores
         $class = str_replace(".", "_", $identifier);
