@@ -15,13 +15,7 @@
          }
      ],
 
-    "framework-version": 9,
-
-    "permissions": [
-        "redcap_every_page_top",
-        "redcap_survey_page_top",
-        "redcap_module_configuration_settings"
-    ],
+    "framework-version": 15,
 
     "enable-every-page-hooks-on-system-pages": false,
 
@@ -246,7 +240,7 @@
     "crons": [],
 
     "compatibility": {
-        "php-version-min": "8.0.0",
-        "redcap-version-min": "13.0.0"
+        "php-version-min": "8.2.15",
+        "redcap-version-min": "14.0.2"
     }
  }
