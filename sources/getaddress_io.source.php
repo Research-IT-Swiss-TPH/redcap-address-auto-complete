@@ -1,7 +1,7 @@
 <?php
 namespace STPH\addressAutoComplete;
 
-if (!class_exists("source")) require_once( __DIR__ . "./../classes/source.class.php" );
+if (!class_exists("source")) require_once( __DIR__ . "/../classes/source.class.php" );
 
 class getaddress_io extends source {
 
