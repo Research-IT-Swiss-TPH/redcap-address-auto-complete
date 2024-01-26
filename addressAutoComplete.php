@@ -14,67 +14,43 @@ class addressAutoComplete extends \ExternalModules\AbstractExternalModule
 {
 
     /** @var string */
-    private $api_source;
+    private $api_source = "";
 
     /** @var string */
-    private $api_limit;
+    private $api_limit = "";
 
     /** @var string */
-    private $api_key;
+    private $api_key = "";
 
     /** @var object */
-    private $api_config;
+    private $api_config = null;
 
     /** @var bool */
-    private $isEnabledForDataEntry;
+    private $isEnabledForDataEntry = false;
 
     /** @var bool */
-    private $isEnabledForSurvey;
+    private $isEnabledForSurvey = false;
 
     /** @var bool */
-    private $isEnabledAdvancedSave;
+    private $isEnabledAdvancedSave = false;
 
     /** @var bool */
-    private $isEnabledCustomAddress;
+    private $isEnabledCustomAddress = false;
 
     /** @var bool */
-    private $isEnabledDebug;
+    private $isEnabledDebug = false;
 
     /** @var array */
-    private $configuration;
+    private $configuration = [];
 
     /** @var array */
-    private $language;
+    private $language = [];
 
     /** @var array */
-    private $helpers;
+    private $helpers = [];
 
     /** @var array */
-    private $instructions;
-
-    /**
-     * Constructs the class
-     *
-     */
-    public function __construct()
-    {
-        parent::__construct();
-        // Other code to run when object is instantiated
-        $this->api_source = "";
-        $this->api_limit = "";
-        $this->api_key = "";
-        $this->api_config = (object)[];
-
-        $this->isEnabledForDataEntry = false;
-        $this->isEnabledForSurvey = false;
-        $this->isEnabledAdvancedSave = false;
-        $this->isEnabledCustomAddress = false;
-
-        $this->configuration = [];
-        $this->language = [];
-        $this->helpers = [];
-        $this->instructions = [];
-    }
+    private $instructions = [];
 
     /**
      * Hooks Address Auto Complete module to redcap_every_page_top    
@@ -85,7 +61,6 @@ class addressAutoComplete extends \ExternalModules\AbstractExternalModule
      */
     public function redcap_every_page_top($project_id = null): void
     {
-
         $this->setSettings();
 
         if ($this->isPage("DataEntry/index.php") && $this->isEnabledForDataEntry) {
@@ -208,7 +183,7 @@ class addressAutoComplete extends \ExternalModules\AbstractExternalModule
 
 
         //  Add general validation here
-
+        $this->api_source = "";
         $this->api_source   = $this->getProjectSetting("api-source");
         $this->api_limit    = $this->getProjectSetting("api-limit");
         $this->api_key      = $this->getProjectSetting("api-key");
