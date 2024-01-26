@@ -3,8 +3,6 @@
 // Set the namespace defined in your config file
 namespace STPH\addressAutoComplete;
 
-use \REDCap;
-
 if (file_exists("vendor/autoload.php")) {
     require 'vendor/autoload.php';
 }
@@ -183,7 +181,6 @@ class addressAutoComplete extends \ExternalModules\AbstractExternalModule
 
 
         //  Add general validation here
-        $this->api_source = "";
         $this->api_source   = $this->getProjectSetting("api-source");
         $this->api_limit    = $this->getProjectSetting("api-limit");
         $this->api_key      = $this->getProjectSetting("api-key");
