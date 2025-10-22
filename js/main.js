@@ -330,7 +330,7 @@ STPH_addressAutoComplete.setState = function(state, iid, ui=null) {
       aac_input.addClass("is-not-listed");
       var content;
       if(STPH_addressAutoComplete.configuration.options.enable_custom_address) {
-        content  = lang.aac_status_is_not_listed_ca + '<a style="" class="no-focus-out aac-custom-address-btn" id="aac-custom-address-btn-'+iid.f+'" href="#add-custom-address">Custom Address</a>';
+        content  = lang.aac_status_is_not_listed_ca + '<a style="" class="no-focus-out aac-custom-address-btn" id="aac-custom-address-btn-'+iid.f+'" href="#add-custom-address">'+lang.cam_title+'</a>';
       } else {
         content = lang.aac_status_is_not_listed;
       }
